@@ -13,7 +13,7 @@ function PreFooter() {
         </div>
         <div>
           <h6 className="h6">
-            A closing line that invites people to get in touch.
+            Have an exciting project, problem to solve, or just want to say hi? Let&apos;s talk.
           </h6>
         </div>
       </div>
