@@ -1,0 +1,15 @@
+// The original design used Neue Haas Grotesk Display Pro, a commercial typeface
+// that cannot be redistributed. This falls back to a system grotesque stack.
+//
+// To use your own licensed font, drop the .woff2 files into public/fonts/ and
+// restore @font-face blocks here for weights 450, 550, 650 and 750 (plus
+// italics if you have them). Then add matching <link rel="preload"> tags in
+// src/pages/_document.page.jsx for the weights used above the fold.
+
+:root {
+  --font-primary: 'Helvetica Neue', Helvetica, Inter, 'Segoe UI', Roboto, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-primary), sans-serif;
+}

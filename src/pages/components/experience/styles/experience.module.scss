@@ -1,0 +1,193 @@
+@import '@src/styles/functions';
+
+// Mirrors src/pages/projects/projects.module.scss (the "All Work" section) so the
+// homepage and /projects read as one system. The only deliberate divergence is the
+// mobile card, which has to carry role, location and description as well as the
+// period and company name.
+
+.titleContainer {
+  display: block;
+  position: relative;
+  width: 100%;
+  background-color: var(--white);
+  padding-top: calc(var(--layout-columns-gap) * 4);
+  padding-bottom: calc(var(--layout-columns-gap) * 1);
+  align-items: center;
+
+  .title {
+    position: relative;
+    width: max-content;
+  }
+}
+
+.text {
+  color: var(--white);
+}
+
+.root {
+  box-shadow:
+    inset 0 0 0 0 var(--white),
+    inset calc(var(--layout-margin) * -1.0065) 0 0 0 var(--white),
+    inset 0 0 0 0 var(--white),
+    inset calc(var(--layout-margin) * 1.0065) 0 0 0 var(--white);
+  position: relative;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  display: block;
+  width: 100%;
+  contain: paint;
+  @include mobile {
+    box-shadow:
+      0 0 0 calc(var(--layout-columns-gap) * 0.5) var(--white),
+      inset calc(var(--layout-margin) * -1.0065) 0 0 0 var(--white),
+      inset calc(var(--layout-margin) * 1.0065) 0 0 0 var(--white);
+  }
+
+  .innerContainer {
+    border-radius: var(--layout-columns-gap);
+    box-shadow: 0 0 0 calc(var(--layout-columns-gap) * 1) var(--white);
+    @include mobile {
+      display: flex;
+      gap: var(--layout-columns-gap);
+      flex-direction: column;
+      border-radius: calc(var(--layout-columns-gap) * 0.5);
+      box-shadow: 0 0 0 calc(var(--layout-columns-gap) * 0.5) var(--white);
+    }
+    width: 100%;
+    display: block;
+
+    .card {
+      display: block;
+      position: relative;
+      contain: paint;
+      height: 100svh;
+      padding: 0;
+      width: 100%;
+      @include mobile {
+        // 50svh in All Work; raised because these cards carry three extra fields.
+        height: 62svh;
+        border-radius: calc(var(--layout-columns-gap) * 0.5);
+        box-shadow: 0 0 0 calc(var(--layout-columns-gap) * 1) var(--white);
+      }
+
+      // All Work flips its card text to black-on-white here. Deliberately not
+      // carried over: this text stays white throughout.
+      &:hover {
+        .canvas {
+          transition: opacity 0.6s cubic-bezier(0.4, 0, 0.1, 1);
+          opacity: 0.55;
+        }
+      }
+
+      .projectsWrap {
+        will-change: transform;
+        pointer-events: none;
+        left: 0;
+        position: absolute;
+        right: 0;
+        z-index: 2;
+        width: 100%;
+
+        .container {
+          transform: translateZ(0);
+          align-items: center;
+          height: 100svh;
+          position: sticky;
+          top: 0;
+          width: 100%;
+          @include mobile {
+            height: 62svh;
+            top: 0px;
+          }
+
+          .projectsDetails {
+            display: flex;
+            flex-direction: column;
+            grid-column: 2 / 9;
+            gap: calc(var(--layout-columns-gap) * 0.4);
+            @include mobile {
+              grid-column: 1 / 7;
+              gap: calc(var(--layout-columns-gap) * 0.25);
+            }
+            > h6,
+            h3,
+            div {
+              color: var(--white);
+              text-shadow: unset;
+            }
+            .company {
+              line-height: 115%;
+            }
+            .role {
+              opacity: 0.85;
+            }
+            .location {
+              opacity: 0.6;
+            }
+            .desc {
+              margin-top: calc(var(--layout-columns-gap) * 0.35);
+              opacity: 0.88;
+              max-width: 92%;
+              @include mobile {
+                max-width: 100%;
+              }
+            }
+          }
+
+          .imageContainer {
+            position: absolute;
+            grid-column: 9 / 17;
+            width: 100%;
+            aspect-ratio: 1920 / 900;
+            border-radius: var(--layout-columns-gap);
+            @include mobile {
+              // All Work centres this over the card; here the text occupies that
+              // space, and the full-bleed canvas already carries the same image.
+              display: none;
+            }
+            > img {
+              box-shadow: 0 0 0 0.01vw rgb(40, 40, 43, 0.3);
+              object-fit: cover;
+              border-radius: calc(var(--layout-columns-gap) * 0.5);
+            }
+          }
+        }
+      }
+
+      .canvas {
+        will-change: transform;
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.1, 1);
+        opacity: 0.4;
+        background-color: var(--black);
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        > img {
+          border-radius: 0px !important;
+          object-fit: cover;
+        }
+
+        .firstCard {
+          border-top-left-radius: var(--layout-columns-gap) !important;
+          border-top-right-radius: var(--layout-columns-gap) !important;
+          @include mobile {
+            border-top-left-radius: calc(var(--layout-columns-gap) * 0.5) !important;
+            border-top-right-radius: calc(var(--layout-columns-gap) * 0.5) !important;
+          }
+        }
+
+        .lastCard {
+          border-bottom-left-radius: var(--layout-columns-gap) !important;
+          border-bottom-right-radius: var(--layout-columns-gap) !important;
+          @include mobile {
+            border-bottom-left-radius: calc(var(--layout-columns-gap) * 0.5) !important;
+            border-bottom-right-radius: calc(var(--layout-columns-gap) * 0.5) !important;
+          }
+        }
+      }
+    }
+  }
+}
