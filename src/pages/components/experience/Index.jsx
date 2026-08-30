@@ -59,7 +59,7 @@ function Experience() {
     <>
       <section className={clsx(styles.titleContainer, 'layout-block-inner')}>
         <h1 className={clsx(styles.title, 'h1')}>
-          <AppearByWords>Ventures</AppearByWords>
+          <AppearByWords>Experience</AppearByWords>
         </h1>
       </section>
       <section

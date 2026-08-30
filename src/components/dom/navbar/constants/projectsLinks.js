@@ -1,6 +1,7 @@
 const projectsLinks = [
-  { title: 'Project One', href: '/projects/project-1' },
-  { title: 'Project Two', href: '/projects/project-2' },
-  { title: 'Project Three', href: '/projects/project-3' },
+  { title: 'Linklytics', href: '/projects/linklytics' },
+  { title: 'Resumind', href: '/projects/resumind' },
+  { title: 'Election Analysis', href: '/projects/election-analysis-2024' },
+  { title: 'CineMatch', href: '/projects/movie-recommender' },
 ];
 export default projectsLinks;

@@ -26,7 +26,8 @@ const EMAIL = 'abhayagnihotri976@gmail.com';
 
 // The social list is split across two columns so neither runs long.
 const CONNECT = footerLinks.slice(0, 4);
-const ELSEWHERE = footerLinks.slice(4);
+// const ELSEWHERE = footerLinks.slice(4);
+// const ELSEWHERE = footerLinks.slice(0,4);
 
 function Footer() {
   const isMobile = useIsMobile();
@@ -141,7 +142,7 @@ function Footer() {
           {renderColumn('SITEMAP', menuLinks.slice(0, -1))}
           {renderColumn('WORK', projectsLinks)}
           {renderColumn('CONNECT', CONNECT, true)}
-          {renderColumn('ELSEWHERE', ELSEWHERE, true)}
+          {/* {renderColumn('ELSEWHERE', ELSEWHERE, true)} */}
           <div className={styles.column}>
             <AppearTitle isFooter>
               <h6 className={clsx(styles.columnTitle, 'p-x')}>CONTACT</h6>
