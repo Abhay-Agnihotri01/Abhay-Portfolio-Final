@@ -45,8 +45,21 @@ function ButtonLink({ href, label, target = false }) {
   }, []);
 
   return (
-    <Link target={target ? '_blank' : undefined} rel={target ? 'noopener noreferrer' : undefined} aria-label={label} scroll={false} href={href}>
-      <button type="button" aria-label={label} ref={buttonRef} className={clsx('p-xs', styles.btnPosnawr)} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <Link
+      target={target ? '_blank' : undefined}
+      rel={target ? 'noopener noreferrer' : undefined}
+      aria-label={label}
+      scroll={false}
+      href={href}
+    >
+      <button
+        type="button"
+        aria-label={label}
+        ref={buttonRef}
+        className={clsx('p-xs', styles.btnPosnawr)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         <span className={clsx('p-x', styles.labelClassic)}>{label}</span>
         <Arrow className={styles.arrowClassic} />
         <span className={styles.ball} ref={spanRef} />

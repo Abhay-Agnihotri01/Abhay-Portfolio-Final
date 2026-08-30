@@ -10,7 +10,11 @@ function AppearByWords({ children }) {
   useSplitAnimation(animationContainerRef, styles);
 
   return (
-    <span ref={animationContainerRef} className={clsx(styles.title, intersected && styles.visible)} aria-hidden="true">
+    <span
+      ref={animationContainerRef}
+      className={clsx(styles.title, intersected && styles.visible)}
+      aria-hidden="true"
+    >
       {children}
     </span>
   );

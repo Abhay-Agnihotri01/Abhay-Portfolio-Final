@@ -48,11 +48,21 @@ function Hero() {
   return (
     <section ref={rootRef} className={clsx(styles.root, 'layout-block-inner')}>
       <header className={styles.titleContainer}>
-        <h2 className={clsx(styles.title, 'h2')}>I&apos;m driven by curiosity, shaped by what I build, and always looking for what&apos;s next.</h2>
+        <h2 className={clsx(styles.title, 'h2')}>
+          I&apos;m driven by curiosity, shaped by what I build, and always
+          looking for what&apos;s next.
+        </h2>
       </header>
       <div className={styles.wrapper}>
         <div ref={heroImageRef} className={styles.imageContainer}>
-          <Image priority quality={100} src="/profile/back.png" sizes="100%" fill alt="Portrait" />
+          <Image
+            priority
+            quality={100}
+            src="/profile/back.png"
+            sizes="100%"
+            fill
+            alt="Portrait"
+          />
         </div>
       </div>
     </section>

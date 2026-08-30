@@ -7,7 +7,7 @@ const projects = [
     img: '/projects/linklytics/cover.png',
     link: '/projects/linklytics',
     date: 'May 2025',
-    liveLink: "https://url-shortner-frontend-abhay.netlify.app/",
+    liveLink: 'https://url-shortner-frontend-abhay.netlify.app/',
     company: 'Full Stack Personal Project',
     primary: '#2D2D2D',
     accentColor: '#f0f4f1',
@@ -33,7 +33,7 @@ const projects = [
     img: '/projects/resumind/cover.png',
     link: '/projects/resumind',
     date: 'March 2025',
-    liveLink: "https://ai-resume-analyzer-main.vercel.app/",
+    liveLink: 'https://ai-resume-analyzer-main.vercel.app/',
     company: 'Full Stack AI based Personal Project',
     primary: '#263745',
     accentColor: '#f0f4f1',
@@ -59,7 +59,8 @@ const projects = [
     img: '/projects/election-analysis-2024/cover.png',
     link: '/projects/election-analysis-2024',
     date: 'May 2025',
-    liveLink: "https://app.powerbi.com/view?r=eyJrIjoiZWY1ZWQwYmEtY2UxMi00OWUxLTlhOGEtMWExMWI3Y2ZhZDQ2IiwidCI6ImIyZTljYjQyLTUxMTktNDUxYi05NzI5LWYyNGE1NzEzNjk3MyJ9",
+    liveLink:
+      'https://app.powerbi.com/view?r=eyJrIjoiZWY1ZWQwYmEtY2UxMi00OWUxLTlhOGEtMWExMWI3Y2ZhZDQ2IiwidCI6ImIyZTljYjQyLTUxMTktNDUxYi05NzI5LWYyNGE1NzEzNjk3MyJ9',
     company: 'Data Analytics & BI Project',
     primary: '#1f3a34',
     accentColor: '#f0f4f1',
@@ -68,12 +69,36 @@ const projects = [
     menuColor: '#2f8a6a',
     menuFontColor: '#f0f4f1',
     images: [
-      { src: '/projects/election-analysis-2024/1.png', tag: 'big', isRight: false },
-      { src: '/projects/election-analysis-2024/2.png', tag: 'small', isRight: false },
-      { src: '/projects/election-analysis-2024/3.png', tag: 'small', isRight: true },
-      { src: '/projects/election-analysis-2024/4.png', tag: 'big', isRight: false },
-      { src: '/projects/election-analysis-2024/5.png', tag: 'medium', isRight: false },
-      { src: '/projects/election-analysis-2024/6.png', tag: 'medium', isRight: false },
+      {
+        src: '/projects/election-analysis-2024/1.png',
+        tag: 'big',
+        isRight: false,
+      },
+      {
+        src: '/projects/election-analysis-2024/2.png',
+        tag: 'small',
+        isRight: false,
+      },
+      {
+        src: '/projects/election-analysis-2024/3.png',
+        tag: 'small',
+        isRight: true,
+      },
+      {
+        src: '/projects/election-analysis-2024/4.png',
+        tag: 'big',
+        isRight: false,
+      },
+      {
+        src: '/projects/election-analysis-2024/5.png',
+        tag: 'medium',
+        isRight: false,
+      },
+      {
+        src: '/projects/election-analysis-2024/6.png',
+        tag: 'medium',
+        isRight: false,
+      },
     ],
     desc: [
       'The 2024 Indian General Elections generated massive, multidimensional datasets across 543 constituencies, making it challenging to extract clear patterns on voter turnout, regional dominance, and swing trends.',
@@ -87,7 +112,7 @@ const projects = [
     img: '/projects/movie-recommender/cover.png',
     link: '/projects/movie-recommender',
     date: 'July 2025',
-    liveLink: "https://movie-recommendor-system-abhay.streamlit.app/",
+    liveLink: 'https://movie-recommendor-system-abhay.streamlit.app/',
     company: 'Machine Learning Personal Project',
     primary: '#1f3a34',
     accentColor: '#f0f4f1',
@@ -97,7 +122,11 @@ const projects = [
     menuFontColor: '#f0f4f1',
     images: [
       { src: '/projects/movie-recommender/1.png', tag: 'big', isRight: false },
-      { src: '/projects/movie-recommender/2.png', tag: 'small', isRight: false },
+      {
+        src: '/projects/movie-recommender/2.png',
+        tag: 'small',
+        isRight: false,
+      },
       { src: '/projects/movie-recommender/3.png', tag: 'small', isRight: true },
     ],
     desc: [

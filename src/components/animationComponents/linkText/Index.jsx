@@ -5,7 +5,16 @@ import styles from '@src/components/animationComponents/linkText/linkText.module
 import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
 import { useRef } from 'react';
 
-function LinkText({ children, href, svgX, spanX, title, className = undefined, hovered = undefined, target = false }) {
+function LinkText({
+  children,
+  href,
+  svgX,
+  spanX,
+  title,
+  className = undefined,
+  hovered = undefined,
+  target = false,
+}) {
   const linkRef = useRef(null);
   const svgRef = useRef(null);
   const spanRef = useRef(null);
@@ -43,7 +52,12 @@ function LinkText({ children, href, svgX, spanX, title, className = undefined, h
       className={clsx(className || 'p-s', styles.root)}
     >
       <div className={styles.linkContent}>
-        <svg ref={svgRef} viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          ref={svgRef}
+          viewBox="0 0 26 27"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path d="M23.2338 12.28L14.7538 20.8V0.239998H11.3538V20.76L2.87375 12.28L0.59375 14.56L13.0738 27L25.5138 14.56L23.2338 12.28Z" />
         </svg>
         <span ref={spanRef}>

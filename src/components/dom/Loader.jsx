@@ -9,7 +9,15 @@ import { useShallow } from 'zustand/react/shallow';
 import { useStore } from '@src/store';
 
 function Loader() {
-  const [lenis, introOut, setIntroOut, setIsLoading, setIsAbout] = useStore(useShallow((state) => [state.lenis, state.introOut, state.setIntroOut, state.setIsLoading, state.setIsAbout]));
+  const [lenis, introOut, setIntroOut, setIsLoading, setIsAbout] = useStore(
+    useShallow((state) => [
+      state.lenis,
+      state.introOut,
+      state.setIntroOut,
+      state.setIsLoading,
+      state.setIsAbout,
+    ]),
+  );
 
   const progressRef = useRef(null);
   const fullNameRef = useRef(null);
@@ -153,7 +161,11 @@ function Loader() {
   }, [lenis, introOut]);
 
   return (
-    <div id="loader" ref={root} className={clsx(styles.root, 'layout-block-inner')}>
+    <div
+      id="loader"
+      ref={root}
+      className={clsx(styles.root, 'layout-block-inner')}
+    >
       <div className={styles.innerContainer}>
         <div className={styles.fullNameContainer}>
           <h2 ref={fullNameRef} className={clsx(styles.fullName, 'h2')}>

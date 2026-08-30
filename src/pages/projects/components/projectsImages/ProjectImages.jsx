@@ -63,22 +63,54 @@ function ProjectImages({ project }) {
       const isFirst = index === 0;
       if (tag === 'small') {
         return (
-          <div style={{ gridColumn: !isMobile ? (!isRight ? '1 / 9' : ' 9 / 17') : !isRight ? '1 / 4' : ' 4 / 7' }} className={styles.imageContainer}>
-            <Image priority={isFirst} loading={isFirst ? undefined : 'lazy'} sizes="100%" src={src} fill alt={`Image-${title}-${index}`} />
+          <div
+            style={{
+              gridColumn: !isMobile
+                ? !isRight
+                  ? '1 / 9'
+                  : ' 9 / 17'
+                : !isRight
+                  ? '1 / 4'
+                  : ' 4 / 7',
+            }}
+            className={styles.imageContainer}
+          >
+            <Image
+              priority={isFirst}
+              loading={isFirst ? undefined : 'lazy'}
+              sizes="100%"
+              src={src}
+              fill
+              alt={`Image-${title}-${index}`}
+            />
           </div>
         );
       }
       if (tag === 'big') {
         return (
           <div className={styles.bigContainer}>
-            <Image priority={isFirst} loading={isFirst ? undefined : 'lazy'} sizes="100%" src={src} fill alt={`Image-${title}-${index}`} />
+            <Image
+              priority={isFirst}
+              loading={isFirst ? undefined : 'lazy'}
+              sizes="100%"
+              src={src}
+              fill
+              alt={`Image-${title}-${index}`}
+            />
           </div>
         );
       }
       if (tag === 'medium') {
         return (
           <div className={styles.mediumContainer}>
-            <Image priority={isFirst} loading={isFirst ? undefined : 'lazy'} sizes="100%" src={src} fill alt={`Image-${title}-${index}`} />
+            <Image
+              priority={isFirst}
+              loading={isFirst ? undefined : 'lazy'}
+              sizes="100%"
+              src={src}
+              fill
+              alt={`Image-${title}-${index}`}
+            />
           </div>
         );
       }
@@ -90,7 +122,9 @@ function ProjectImages({ project }) {
   return (
     <section className={clsx(styles.root, 'layout-grid-inner')}>
       {project.images.map((image, index) => (
-        <Fragment key={`${project.title}-image-${index}`}>{renderMediaContainer({ ...image, index, title: project.title })}</Fragment>
+        <Fragment key={`${project.title}-image-${index}`}>
+          {renderMediaContainer({ ...image, index, title: project.title })}
+        </Fragment>
       ))}
     </section>
   );

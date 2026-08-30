@@ -12,7 +12,9 @@ function PreFooter() {
           <h2 className="h1"> together.</h2>
         </div>
         <div>
-          <h6 className="h6">A closing line that invites people to get in touch.</h6>
+          <h6 className="h6">
+            A closing line that invites people to get in touch.
+          </h6>
         </div>
       </div>
 

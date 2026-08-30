@@ -23,7 +23,10 @@ function Page({ id }) {
   const [isLoading] = useStore(useShallow((state) => [state.isLoading]));
   const windowSize = useWindowSize();
 
-  const projectIndex = useMemo(() => projects.findIndex((project) => project.id === id), [id]);
+  const projectIndex = useMemo(
+    () => projects.findIndex((project) => project.id === id),
+    [id],
+  );
   const currentProject = useMemo(() => projects[projectIndex], [projectIndex]);
 
   const updateCSSVariables = (project) => {
@@ -105,7 +108,13 @@ function Page({ id }) {
           <ProjectImages project={currentProject} />
         </div>
       </section>
-      <NextProject nextProject={projectIndex === projects.length - 1 ? projects[0] : projects[projectIndex + 1]} />
+      <NextProject
+        nextProject={
+          projectIndex === projects.length - 1
+            ? projects[0]
+            : projects[projectIndex + 1]
+        }
+      />
     </>
   );
 }

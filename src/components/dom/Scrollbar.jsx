@@ -9,15 +9,23 @@ import { useStore } from '@src/store';
 function Scrollbar() {
   const progressBar = useRef();
   const scrollbarRef = useRef();
-  const [isLoading, isMenuOpen, introOut] = useStore(useShallow((state) => [state.isLoading, state.isMenuOpen, state.introOut]));
+  const [isLoading, isMenuOpen, introOut] = useStore(
+    useShallow((state) => [state.isLoading, state.isMenuOpen, state.introOut]),
+  );
   let fadeTimeout;
 
   const updateScrollbar = (scroll, limit) => {
     const progress = scroll / limit;
     const maxTopValueInVh = 80 - 6;
-    const newTopValueInVh = Math.min(maxTopValueInVh, progress * maxTopValueInVh);
+    const newTopValueInVh = Math.min(
+      maxTopValueInVh,
+      progress * maxTopValueInVh,
+    );
 
-    gsap.to(progressBar.current, { top: `${newTopValueInVh}svh`, duration: 0.3 });
+    gsap.to(progressBar.current, {
+      top: `${newTopValueInVh}svh`,
+      duration: 0.3,
+    });
   };
 
   useScroll(({ scroll, limit }) => {
@@ -46,7 +54,12 @@ function Scrollbar() {
   }
 
   return (
-    <div id="scrollbar" ref={scrollbarRef} className={styles.scrollbar} aria-hidden="true">
+    <div
+      id="scrollbar"
+      ref={scrollbarRef}
+      className={styles.scrollbar}
+      aria-hidden="true"
+    >
       <div ref={progressBar} className={styles.inner} />
     </div>
   );

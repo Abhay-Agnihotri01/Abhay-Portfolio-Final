@@ -42,7 +42,13 @@ function About() {
 
   const renderImageContainer = () => (
     <div className={styles.imageContainer}>
-      <Image priority src="/profile/front.png" sizes="100%" fill alt="Portrait" />
+      <Image
+        priority
+        src="/profile/front.png"
+        sizes="100%"
+        fill
+        alt="Portrait"
+      />
     </div>
   );
 
@@ -59,7 +65,7 @@ function About() {
         {isMobile ? renderImageContainer() : null}
         <div className={clsx(styles.descWrapper)} ref={animatedImageRef}>
           <AppearTitle>
-            <div className="p-l">“I don't want to simply follow</div>
+            <div className="p-l">“I don&apos;t want to simply follow</div>
             <div className="p-l">the path that already exists.</div>
             <div className="p-l">I want to keep learning, keep building,</div>
             <div className="p-l">and leave something behind.”</div>
@@ -69,19 +75,33 @@ function About() {
         <div className={clsx(styles.descWrapperBottom)}>
           {!isMobile ? (
             <AppearTitle key="desktop-descWrapperBottom">
-              <h6 className="h6">I&apos;m a developer who enjoys turning ideas</h6>
-              <h6 className="h6">into thoughtful, useful digital experiences.</h6>
-              <h6 className="h6">I&apos;m curious by nature, always learning something</h6>
+              <h6 className="h6">
+                I&apos;m a developer who enjoys turning ideas
+              </h6>
+              <h6 className="h6">
+                into thoughtful, useful digital experiences.
+              </h6>
+              <h6 className="h6">
+                I&apos;m curious by nature, always learning something
+              </h6>
               <h6 className="h6">new and looking for better ways to build.</h6>
-              <h6 className="h6">For me, every project is another chance to grow.</h6>
+              <h6 className="h6">
+                For me, every project is another chance to grow.
+              </h6>
             </AppearTitle>
           ) : (
-              <AppearTitle key="mobile-descWrapperBottom">
-                <h6 className="h6">I&apos;m a developer who enjoys turning ideas into</h6>
-                <h6 className="h6">thoughtful, useful digital experiences. I&apos;m always</h6>
-                <h6 className="h6">learning, experimenting, and looking for better</h6>
-                <h6 className="h6">ways to build and grow.</h6>
-              </AppearTitle>
+            <AppearTitle key="mobile-descWrapperBottom">
+              <h6 className="h6">
+                I&apos;m a developer who enjoys turning ideas into
+              </h6>
+              <h6 className="h6">
+                thoughtful, useful digital experiences. I&apos;m always
+              </h6>
+              <h6 className="h6">
+                learning, experimenting, and looking for better
+              </h6>
+              <h6 className="h6">ways to build and grow.</h6>
+            </AppearTitle>
           )}
           <div className={clsx(styles.buttonContainer)}>
             <ButtonLink href="/about" label="ABOUT ME" />

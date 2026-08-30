@@ -6,7 +6,9 @@ import { useEffect } from 'react';
 function useFoucFix() {
   useEffect(() => {
     // Gather all server-side rendered stylesheet entries.
-    let stylesheets = Array.from(document.querySelectorAll('link[rel="stylesheet"][data-n-p]')).map((element) => ({
+    let stylesheets = Array.from(
+      document.querySelectorAll('link[rel="stylesheet"][data-n-p]'),
+    ).map((element) => ({
       element,
       href: element.getAttribute('href'),
     }));
@@ -19,7 +21,10 @@ function useFoucFix() {
     const mutationHandler = (mutations) => {
       // Gather all <style data-n-href="/..."> elements.
       const entries = mutations
-        .filter(({ target }) => target.nodeName === 'STYLE' && target.hasAttribute('data-n-href'))
+        .filter(
+          ({ target }) =>
+            target.nodeName === 'STYLE' && target.hasAttribute('data-n-href'),
+        )
         .map(({ target }) => ({
           element: target,
           href: target.getAttribute('data-n-href'),

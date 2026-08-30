@@ -24,7 +24,9 @@ function Stats() {
 
       <div className={styles.note}>
         <AppearTitle>
-          <h6 className={clsx('h6', 'bold')}>Open for free clinic valuation consultations.</h6>
+          <h6 className={clsx('h6', 'bold')}>
+            Open for free clinic valuation consultations.
+          </h6>
         </AppearTitle>
       </div>
     </section>

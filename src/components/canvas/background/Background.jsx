@@ -41,7 +41,9 @@ function Background() {
       uOffsetX: { value: 0.34 },
       uOffsetY: { value: 0.0 },
       uLinesAmount: { value: 5.0 },
-      uPlaneRes: { value: new THREE.Vector2(windowSize.width, windowSize.height) },
+      uPlaneRes: {
+        value: new THREE.Vector2(windowSize.width, windowSize.height),
+      },
       uMouse2D: { value: new THREE.Vector2(1.0, 1.0) },
       uBackgroundScale: { value: 3.0 },
     }),
@@ -53,8 +55,20 @@ function Background() {
       const materialUniforms = ref.current.material.uniforms;
       materialUniforms.uTime.value += delta * 0.001;
 
-      updateOffset(materialUniforms.uOffsetX, isOffsetXIncreasing, OFFSET_STEP, OFFSET_MIN, OFFSET_MAX);
-      updateOffset(materialUniforms.uOffsetY, isOffsetYIncreasing, OFFSET_STEP, OFFSET_MIN, OFFSET_MAX);
+      updateOffset(
+        materialUniforms.uOffsetX,
+        isOffsetXIncreasing,
+        OFFSET_STEP,
+        OFFSET_MIN,
+        OFFSET_MAX,
+      );
+      updateOffset(
+        materialUniforms.uOffsetY,
+        isOffsetYIncreasing,
+        OFFSET_STEP,
+        OFFSET_MIN,
+        OFFSET_MAX,
+      );
     }
   });
 

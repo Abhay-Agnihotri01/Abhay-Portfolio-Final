@@ -18,7 +18,9 @@ import { useStore } from '@src/store';
 import { useWindowSize } from '@darkroom.engineering/hamo';
 
 const Time = dynamic(() => import('@src/components/dom/Time'), { ssr: false });
-const GoTop = dynamic(() => import('@src/components/dom/GoTop'), { ssr: false });
+const GoTop = dynamic(() => import('@src/components/dom/GoTop'), {
+  ssr: false,
+});
 
 const EMAIL = 'abhayagnihotri976@gmail.com';
 
@@ -54,7 +56,10 @@ function Footer() {
               scroller: document?.querySelector('main'),
             });
           } else {
-            gsap.set(footerRef.current, { transform: 'translate(0%, 0%)', height: 'auto' });
+            gsap.set(footerRef.current, {
+              transform: 'translate(0%, 0%)',
+              height: 'auto',
+            });
           }
         }
       };
@@ -76,7 +81,12 @@ function Footer() {
         <h6 className={clsx(styles.columnTitle, 'p-x')}>{title}</h6>
         {links.map((link) => (
           <div key={link.title} className={styles.linkTextContainer}>
-            <LinkText target={external} className={styles.linkText} title={link.title} href={link.href}>
+            <LinkText
+              target={external}
+              className={styles.linkText}
+              title={link.title}
+              href={link.href}
+            >
               <span className="footer">{link.title}</span>
             </LinkText>
           </div>
@@ -86,14 +96,23 @@ function Footer() {
   );
 
   return (
-    <section ref={footerRef} className={clsx(styles.root, 'layout-block-inner')} role="contentinfo">
+    <section
+      ref={footerRef}
+      className={clsx(styles.root, 'layout-block-inner')}
+      role="contentinfo"
+    >
       <div className={styles.inner}>
         {/* brand + call to action */}
         <div className={styles.top}>
           <div className={styles.brand}>
             <AppearTitle isFooter>
-              <h4 className={clsx(styles.wordmark, 'h4', 'bold')}>Abhay Agnihotri</h4>
-              <div className={clsx(styles.brandDesc, 'p-x')}>Transforming complex data into intelligent products, predictive models, and seamless user experiences.</div>
+              <h4 className={clsx(styles.wordmark, 'h4', 'bold')}>
+                Abhay Agnihotri
+              </h4>
+              <div className={clsx(styles.brandDesc, 'p-x')}>
+                Transforming complex data into intelligent products, predictive
+                models, and seamless user experiences.
+              </div>
               <div className={clsx(styles.brandMeta, 'p-xs')}>
                 Lucknow, India · <Time />
               </div>
@@ -102,7 +121,12 @@ function Footer() {
           <div className={styles.cta}>
             <AppearTitle isFooter>
               <h3 className={clsx(styles.ctaTitle, 'h3')}>Ready to build?</h3>
-              <Link aria-label="Send email" scroll={false} href={`mailto:${EMAIL}`} className={styles.ctaButton}>
+              <Link
+                aria-label="Send email"
+                scroll={false}
+                href={`mailto:${EMAIL}`}
+                className={styles.ctaButton}
+              >
                 <span className="p-x">Get in touch</span>
                 <span className={styles.ctaArrow}>&#8594;</span>
               </Link>
@@ -122,11 +146,17 @@ function Footer() {
             <AppearTitle isFooter>
               <h6 className={clsx(styles.columnTitle, 'p-x')}>CONTACT</h6>
               <div className={styles.linkTextContainer}>
-                <LinkText className={styles.linkText} title="Email" href={`mailto:${EMAIL}`}>
+                <LinkText
+                  className={styles.linkText}
+                  title="Email"
+                  href={`mailto:${EMAIL}`}
+                >
                   <span className="footer">{EMAIL}</span>
                 </LinkText>
               </div>
-              <div className={clsx(styles.availability, 'p-x')}>Currently available for new work</div>
+              <div className={clsx(styles.availability, 'p-x')}>
+                Currently available for new work
+              </div>
             </AppearTitle>
           </div>
         </div>
@@ -135,10 +165,20 @@ function Footer() {
 
         {/* bottom bar */}
         <div className={styles.bottom}>
-          <div className={clsx(styles.copyright, 'p-xs')}>© 2026 · Abhay Agnihotri · All Rights Reserved</div>
+          <div className={clsx(styles.copyright, 'p-xs')}>
+            © 2026 · Abhay Agnihotri · All Rights Reserved
+          </div>
           <div className={styles.socialRow}>
             {footerLinks.map((link) => (
-              <a key={link.title} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.title} title={link.title} className={styles.socialButton}>
+              <a
+                key={link.title}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.title}
+                title={link.title}
+                className={styles.socialButton}
+              >
                 <SocialIcon name={link.icon} className={styles.socialIcon} />
               </a>
             ))}

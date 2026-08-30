@@ -28,15 +28,21 @@ function Portal({ children, fadeIn, container }) {
 
   if (!isVisible) return null;
 
-  const portalContainer = typeof window !== 'undefined' ? container || document.body : null;
+  const portalContainer =
+    typeof window !== 'undefined' ? container || document.body : null;
 
-  return portalContainer ? ReactDOM.createPortal(children, portalContainer) : null;
+  return portalContainer
+    ? ReactDOM.createPortal(children, portalContainer)
+    : null;
 }
 
 Portal.propTypes = {
   children: PropTypes.node.isRequired,
   fadeIn: PropTypes.bool.isRequired,
-  container: typeof window !== 'undefined' ? PropTypes.instanceOf(Element) : PropTypes.any,
+  container:
+    typeof window !== 'undefined'
+      ? PropTypes.instanceOf(Element)
+      : PropTypes.any,
 };
 
 Portal.defaultProps = {

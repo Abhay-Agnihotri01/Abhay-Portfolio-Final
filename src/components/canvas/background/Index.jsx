@@ -2,7 +2,8 @@ import Background from '@src/components/canvas/background/Background';
 import { Canvas } from '@react-three/fiber';
 
 function Index() {
-  const devicePixelRatio = typeof window !== 'undefined' ? Math.min(1, window.devicePixelRatio) : 1;
+  const devicePixelRatio =
+    typeof window !== 'undefined' ? Math.min(1, window.devicePixelRatio) : 1;
 
   return (
     <Canvas

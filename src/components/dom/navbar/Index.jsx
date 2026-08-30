@@ -47,14 +47,30 @@ function Navbar() {
             elements, so the flex row stays on .innerHeader rather than on Glass itself. */}
         {/* display is set inline because Glass applies `display: inline-block` as an
             inline style, which would otherwise beat the stylesheet rule. */}
-        <Glass className={styles.glassBar} optics={{ frost: 10, saturate: 1.2, sheen: 0.35 }} style={{ display: 'block', background: 'rgba(255, 255, 255, 0.38)' }}>
+        <Glass
+          className={styles.glassBar}
+          optics={{ frost: 10, saturate: 1.2, sheen: 0.35 }}
+          style={{ display: 'block', background: 'rgba(255, 255, 255, 0.38)' }}
+        >
           <div className={styles.innerHeader}>
-            <Link onClick={goToTop} aria-label="Go home" scroll={false} href="/">
-              <h4 className={clsx('bold', 'h4', styles.wordmark)}>ABHAY AGNIHOTRI</h4>
+            <Link
+              onClick={goToTop}
+              aria-label="Go home"
+              scroll={false}
+              href="/"
+            >
+              <h4 className={clsx('bold', 'h4', styles.wordmark)}>
+                ABHAY AGNIHOTRI
+              </h4>
             </Link>
 
             <div className={styles.rightContainer}>
-              {!isMobile && <ButtonLink href="mailto:abhayagnihotri976@gmail.com" label="GET IN TOUCH" />}
+              {!isMobile && (
+                <ButtonLink
+                  href="mailto:abhayagnihotri976@gmail.com"
+                  label="GET IN TOUCH"
+                />
+              )}
               <MenuButton />
             </div>
           </div>

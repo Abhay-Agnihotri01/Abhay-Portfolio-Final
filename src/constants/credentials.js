@@ -1,7 +1,20 @@
 export const education = [
-  { school: 'Dr. A.P.J. Abdul Kalam Technical University,Lucknow, Uttar Pradesh', award: 'B.Tech in CSE (AI & ML)', period: 'Aug 2022 – May 2026' },
-  { school: 'Nirmala Convent Inter College', award: 'Intermediate', period: 'May 2021 – Jul 2022' },
-  { school: 'Nirmala Convent Inter College', award: 'Matriculation', period: 'May 2019 – Jul 2020' },
+  {
+    school:
+      'Dr. A.P.J. Abdul Kalam Technical University,Lucknow, Uttar Pradesh',
+    award: 'B.Tech in CSE (AI & ML)',
+    period: 'Aug 2022 – May 2026',
+  },
+  {
+    school: 'Nirmala Convent Inter College',
+    award: 'Intermediate',
+    period: 'May 2021 – Jul 2022',
+  },
+  {
+    school: 'Nirmala Convent Inter College',
+    award: 'Matriculation',
+    period: 'May 2019 – Jul 2020',
+  },
 ];
 
 // Pills that wrap. Nine to fifteen reads well; beyond that this column grows

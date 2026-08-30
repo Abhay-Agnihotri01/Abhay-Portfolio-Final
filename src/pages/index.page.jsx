@@ -9,7 +9,8 @@ import CustomHead from '@src/components/dom/CustomHead';
 
 const seo = {
   title: 'Abhay Agnihotri - Portfolio',
-  description: 'Software Developer specializing in Data Science, Machine Learning, and Full-Stack Development. I build scalable ML solutions, AI-powered applications, data-driven platforms, and production-ready web applications.',
+  description:
+    'Software Developer specializing in Data Science, Machine Learning, and Full-Stack Development. I build scalable ML solutions, AI-powered applications, data-driven platforms, and production-ready web applications.',
   keywords: [
     'Abhay Agnihotri',
     'Software Developer',

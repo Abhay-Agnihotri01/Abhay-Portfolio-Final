@@ -7,7 +7,8 @@ import CustomHead from '@src/components/dom/CustomHead';
 
 const seo = {
   title: 'Abhay Agnihotri - About',
-  description: 'Learn more about Abhay Agnihotri, a developer who enjoys turning ideas into thoughtful and useful digital experiences.',
+  description:
+    'Learn more about Abhay Agnihotri, a developer who enjoys turning ideas into thoughtful and useful digital experiences.',
   keywords: [
     'Abhay Agnihotri',
     'About Abhay Agnihotri',

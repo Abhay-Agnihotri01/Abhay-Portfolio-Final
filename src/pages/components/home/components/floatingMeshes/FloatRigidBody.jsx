@@ -25,7 +25,15 @@ export default function FloatRigidBody({ totalCount, transparentCount }) {
 
   const normalCount = totalCount - transparentCount;
 
-  const { factors, xFactors, yFactors, zFactors, normalInstances, transparentInstances, colors } = useMemo(() => {
+  const {
+    factors,
+    xFactors,
+    yFactors,
+    zFactors,
+    normalInstances,
+    transparentInstances,
+    colors,
+  } = useMemo(() => {
     const factors = [];
 
     const xFactors = [];
@@ -61,7 +69,15 @@ export default function FloatRigidBody({ totalCount, transparentCount }) {
       }
     }
 
-    return { factors, xFactors, yFactors, zFactors, normalInstances, transparentInstances, colors };
+    return {
+      factors,
+      xFactors,
+      yFactors,
+      zFactors,
+      normalInstances,
+      transparentInstances,
+      colors,
+    };
   }, [isMobile, normalCount, totalCount]);
 
   useEffect(() => {
@@ -79,15 +95,34 @@ export default function FloatRigidBody({ totalCount, transparentCount }) {
           const t = factors[i] + state.clock.elapsedTime * 0.25;
 
           const targetPosition = new THREE.Vector3(
-            Math.cos(t) + Math.sin(t * 1) / 10 + xFactors[i] + Math.cos((t / 10) * factors[i]) + (Math.sin(t * 1) * factors[i]) / 10,
-            Math.sin(t) + Math.cos(t * 2) / 10 + yFactors[i] + Math.sin((t / 10) * factors[i]) + (Math.cos(t * 2) * factors[i]) / 10,
-            Math.sin(t) + Math.cos(t * 2) / 10 + zFactors[i] + Math.cos((t / 10) * factors[i]) + (Math.sin(t * 3) * factors[i]) / 4,
+            Math.cos(t) +
+              Math.sin(t * 1) / 10 +
+              xFactors[i] +
+              Math.cos((t / 10) * factors[i]) +
+              (Math.sin(t * 1) * factors[i]) / 10,
+            Math.sin(t) +
+              Math.cos(t * 2) / 10 +
+              yFactors[i] +
+              Math.sin((t / 10) * factors[i]) +
+              (Math.cos(t * 2) * factors[i]) / 10,
+            Math.sin(t) +
+              Math.cos(t * 2) / 10 +
+              zFactors[i] +
+              Math.cos((t / 10) * factors[i]) +
+              (Math.sin(t * 3) * factors[i]) / 4,
           );
 
           const apiTranslation = body.translation();
-          const currentPosition = new THREE.Vector3(apiTranslation.x, apiTranslation.y, apiTranslation.z);
+          const currentPosition = new THREE.Vector3(
+            apiTranslation.x,
+            apiTranslation.y,
+            apiTranslation.z,
+          );
 
-          const direction = new THREE.Vector3().subVectors(targetPosition, currentPosition);
+          const direction = new THREE.Vector3().subVectors(
+            targetPosition,
+            currentPosition,
+          );
 
           const forceMagnitude = 0.5;
           const force = direction.normalize().multiplyScalar(forceMagnitude);
@@ -98,7 +133,9 @@ export default function FloatRigidBody({ totalCount, transparentCount }) {
 
       const newColor = new THREE.Color(accents[currentAccentIndex]);
       for (let i = !isMobile ? 7 : 4; i < normalCount; i++) {
-        const currentColor = new THREE.Color().fromArray(colors.slice(i * 3, (i + 1) * 3));
+        const currentColor = new THREE.Color().fromArray(
+          colors.slice(i * 3, (i + 1) * 3),
+        );
         easing.dampC(currentColor, newColor, 0.1, state.delta);
         colors.set(currentColor.toArray(), i * 3);
       }
@@ -114,15 +151,34 @@ export default function FloatRigidBody({ totalCount, transparentCount }) {
           const t = factors[normalCount + i] + state.clock.elapsedTime * 0.25;
 
           const targetPosition = new THREE.Vector3(
-            Math.cos(t) + Math.sin(t * 1) / 10 + xFactors[normalCount + i] + Math.cos((t / 10) * factors[normalCount + i]) + (Math.sin(t * 1) * factors[normalCount + i]) / 10,
-            Math.sin(t) + Math.cos(t * 2) / 10 + yFactors[normalCount + i] + Math.sin((t / 10) * factors[normalCount + i]) + (Math.cos(t * 2) * factors[normalCount + i]) / 10,
-            Math.sin(t) + Math.cos(t * 2) / 10 + zFactors[normalCount + i] + Math.cos((t / 10) * factors[normalCount + i]) + (Math.sin(t * 3) * factors[normalCount + i]) / 4,
+            Math.cos(t) +
+              Math.sin(t * 1) / 10 +
+              xFactors[normalCount + i] +
+              Math.cos((t / 10) * factors[normalCount + i]) +
+              (Math.sin(t * 1) * factors[normalCount + i]) / 10,
+            Math.sin(t) +
+              Math.cos(t * 2) / 10 +
+              yFactors[normalCount + i] +
+              Math.sin((t / 10) * factors[normalCount + i]) +
+              (Math.cos(t * 2) * factors[normalCount + i]) / 10,
+            Math.sin(t) +
+              Math.cos(t * 2) / 10 +
+              zFactors[normalCount + i] +
+              Math.cos((t / 10) * factors[normalCount + i]) +
+              (Math.sin(t * 3) * factors[normalCount + i]) / 4,
           );
 
           const apiTranslation = body.translation();
-          const currentPosition = new THREE.Vector3(apiTranslation.x, apiTranslation.y, apiTranslation.z);
+          const currentPosition = new THREE.Vector3(
+            apiTranslation.x,
+            apiTranslation.y,
+            apiTranslation.z,
+          );
 
-          const direction = new THREE.Vector3().subVectors(targetPosition, currentPosition);
+          const direction = new THREE.Vector3().subVectors(
+            targetPosition,
+            currentPosition,
+          );
 
           const forceMagnitude = 0.5;
           const force = direction.normalize().multiplyScalar(forceMagnitude);
@@ -135,16 +191,46 @@ export default function FloatRigidBody({ totalCount, transparentCount }) {
 
   return (
     <>
-      <InstancedRigidBodies type="dynamic" ref={apiNormal} colliders="ball" instances={normalInstances} linearDamping={50} angularDamping={50} friction={0.1}>
-        <instancedMesh dispose={null} ref={sphereRef} castShadow receiveShadow args={[null, null, normalCount]}>
+      <InstancedRigidBodies
+        type="dynamic"
+        ref={apiNormal}
+        colliders="ball"
+        instances={normalInstances}
+        linearDamping={50}
+        angularDamping={50}
+        friction={0.1}
+      >
+        <instancedMesh
+          dispose={null}
+          ref={sphereRef}
+          castShadow
+          receiveShadow
+          args={[null, null, normalCount]}
+        >
           <sphereGeometry>
-            <instancedBufferAttribute attach="attributes-color" args={[colors, 3]} />
+            <instancedBufferAttribute
+              attach="attributes-color"
+              args={[colors, 3]}
+            />
           </sphereGeometry>
           <meshStandardMaterial vertexColors roughness={0.5} metalness={0.2} />
         </instancedMesh>
       </InstancedRigidBodies>
-      <InstancedRigidBodies type="dynamic" ref={apiTransparent} colliders="ball" instances={transparentInstances} linearDamping={50} angularDamping={50} friction={0.1}>
-        <instancedMesh dispose={null} castShadow receiveShadow args={[null, null, transparentCount]}>
+      <InstancedRigidBodies
+        type="dynamic"
+        ref={apiTransparent}
+        colliders="ball"
+        instances={transparentInstances}
+        linearDamping={50}
+        angularDamping={50}
+        friction={0.1}
+      >
+        <instancedMesh
+          dispose={null}
+          castShadow
+          receiveShadow
+          args={[null, null, transparentCount]}
+        >
           <sphereGeometry />
           <MeshTransmissionMaterial
             samples={10}

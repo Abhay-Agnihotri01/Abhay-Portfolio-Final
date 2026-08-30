@@ -23,14 +23,16 @@ function useRenderTargetTexture() {
   const [scene, target] = useMemo(() => {
     if (typeof window !== 'undefined') {
       const scene = new THREE.Scene();
-      const target = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
+      const target = new THREE.WebGLRenderTarget(
+        window.innerWidth,
+        window.innerHeight,
+      );
       return [scene, target];
     }
     return [null, null];
   }, []);
 
-
-   useFrame(({ clock, gl }) => {
+  useFrame(({ clock, gl }) => {
     const time = clock.getElapsedTime();
     if (camera.current && mesh.current) {
       mesh.current.rotation.y = time;
@@ -44,13 +46,21 @@ function useRenderTargetTexture() {
   return { camera, mesh, scene, texture: target?.texture };
 }
 
-
-
 export default function MagicBall({ roughness, color, isSphere, text }) {
   return (
     <View>
-      <Marble roughness={roughness} color={color} isSphere={isSphere} text={text} />
-      <Environment files={isSphere ? '/other/warehouse.hdr' : '/other/studio_small_09_1k.hdr'} blur={1} />
+      <Marble
+        roughness={roughness}
+        color={color}
+        isSphere={isSphere}
+        text={text}
+      />
+      <Environment
+        files={
+          isSphere ? '/other/warehouse.hdr' : '/other/studio_small_09_1k.hdr'
+        }
+        blur={1}
+      />
     </View>
   );
 }
@@ -60,24 +70,44 @@ function Marble({ roughness, color, isSphere, text }) {
 
   return (
     <>
-      <perspectiveCamera aspect={1} far={20} fov={75} near={1} position={[0, 0, 5]} ref={camera} />
+      <perspectiveCamera
+        aspect={1}
+        far={20}
+        fov={75}
+        near={1}
+        position={[0, 0, 5]}
+        ref={camera}
+      />
       {isSphere ? (
         <Sphere args={[1.8, 32, 32]} ref={mesh}>
-          <MagicMarbleMaterial isSphere={isSphere} texture={texture} color={color} roughness={roughness} />
+          <MagicMarbleMaterial
+            isSphere={isSphere}
+            texture={texture}
+            color={color}
+            roughness={roughness}
+          />
           {/* <meshStandardMaterial attach="material" map={colorMap} normalMap={normalMap} /> */}
         </Sphere>
       ) : (
         <mesh ref={mesh}>
-          <roundedBoxGeometry attach="geometry" args={[2.7, 2.7, 2.7, 7, 0.2]} />
-          <MagicMarbleMaterial isSphere={isSphere} texture={texture} color={color} roughness={roughness} />
+          <roundedBoxGeometry
+            attach="geometry"
+            args={[2.7, 2.7, 2.7, 7, 0.2]}
+          />
+          <MagicMarbleMaterial
+            isSphere={isSphere}
+            texture={texture}
+            color={color}
+            roughness={roughness}
+          />
         </mesh>
       )}
       {scene &&
         createPortal(
-        <Text scale={[0.7, 1.5, 1]} fontSize={isSphere ? 1 : 0.8}>
-          {text}
-        </Text>,
-        scene,
+          <Text scale={[0.7, 1.5, 1]} fontSize={isSphere ? 1 : 0.8}>
+            {text}
+          </Text>,
+          scene,
         )}
     </>
   );
@@ -136,7 +166,7 @@ float snoise(vec2 v) {
 }`;
 
 function MagicMarbleMaterial({ roughness, color, texture, isSphere }) {
-   const volumeColor = {
+  const volumeColor = {
     r: 0,
     g: 0,
     b: 255,
@@ -161,13 +191,12 @@ function MagicMarbleMaterial({ roughness, color, texture, isSphere }) {
   configureTexture(baseTexture2);
   configureTexture(heightVolumeTexture1);
 
-   const getTextures = (isSphere) => ({
+  const getTextures = (isSphere) => ({
     baseMap: isSphere ? baseTexture2 : baseTexture2,
     heightVolumeMap: isSphere ? baseTexture1 : heightVolumeTexture1,
   });
 
   const { baseMap, heightVolumeMap } = getTextures(isSphere);
-
 
   const [uniforms] = useState(() => ({
     time: { value: 0 },
@@ -189,17 +218,17 @@ function MagicMarbleMaterial({ roughness, color, texture, isSphere }) {
     uniforms.time.value = 1 + clock.elapsedTime * 0.05;
   });
 
-   const onBeforeCompile = (shader) => {
-     shader.uniforms = { ...shader.uniforms, ...uniforms };
+  const onBeforeCompile = (shader) => {
+    shader.uniforms = { ...shader.uniforms, ...uniforms };
 
-     shader.vertexShader = /* glsl */ `
+    shader.vertexShader = /* glsl */ `
       varying vec3 v_pos;
       varying vec3 v_dir;
       varying vec2 vUv;
 
     ${shader.vertexShader}`;
 
-     shader.vertexShader = shader.vertexShader.replace(
+    shader.vertexShader = shader.vertexShader.replace(
       /void main\(\) {/,
       (match) =>
         `${
@@ -214,7 +243,7 @@ function MagicMarbleMaterial({ roughness, color, texture, isSphere }) {
         `,
     );
 
-     shader.fragmentShader = /* glsl */ `
+    shader.fragmentShader = /* glsl */ `
       #define FLIP vec2(1., -1.)
 
       uniform vec3 volumeColor;
@@ -239,7 +268,7 @@ function MagicMarbleMaterial({ roughness, color, texture, isSphere }) {
 
     ${shader.fragmentShader}`;
 
-     shader.fragmentShader = shader.fragmentShader.replace(
+    shader.fragmentShader = shader.fragmentShader.replace(
       /void main\(\) {/,
       (match) =>
         `${
@@ -303,5 +332,11 @@ function MagicMarbleMaterial({ roughness, color, texture, isSphere }) {
     );
   };
 
-  return <meshStandardMaterial roughness={roughness} onBeforeCompile={onBeforeCompile} customProgramCacheKey={() => onBeforeCompile.toString()} />;
+  return (
+    <meshStandardMaterial
+      roughness={roughness}
+      onBeforeCompile={onBeforeCompile}
+      customProgramCacheKey={() => onBeforeCompile.toString()}
+    />
+  );
 }

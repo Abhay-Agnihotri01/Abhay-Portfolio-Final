@@ -32,7 +32,8 @@ function Experience() {
                 id: `experienceRef-${index}`,
                 trigger: rootRef.current,
                 start: `top+=${windowSize.height * index}`,
-                end: () => `+=${(cardRefs.current.length - 2) * windowSize.height}`,
+                end: () =>
+                  `+=${(cardRefs.current.length - 2) * windowSize.height}`,
                 scrub: true,
                 scroller: document?.querySelector('main'),
                 invalidateOnRefresh: true,
@@ -61,19 +62,31 @@ function Experience() {
           <AppearByWords>Ventures</AppearByWords>
         </h1>
       </section>
-      <section ref={rootRef} className={clsx(styles.root, 'layout-block-inner')}>
+      <section
+        ref={rootRef}
+        className={clsx(styles.root, 'layout-block-inner')}
+      >
         <div className={styles.innerContainer}>
           {experience.map((job, index) => (
-            <article key={`${job.company}-${job.period}`} className={styles.card}>
+            <article
+              key={`${job.company}-${job.period}`}
+              className={styles.card}
+            >
               <div
                 style={
                   !isMobile
                     ? {
-                        height: index === experience.length - 1 ? '200svh' : `${200 + 100 * index}svh`,
+                        height:
+                          index === experience.length - 1
+                            ? '200svh'
+                            : `${200 + 100 * index}svh`,
                         top: index === 0 ? '0px' : '-100svh',
                       }
                     : {
-                        height: index === experience.length - 1 ? '124svh' : `${200 + 100 * index}svh`,
+                        height:
+                          index === experience.length - 1
+                            ? '124svh'
+                            : `${200 + 100 * index}svh`,
                         top: index === 0 ? '0px' : '-62svh',
                       }
                 }
@@ -82,24 +95,46 @@ function Experience() {
                 <div className={clsx(styles.container, 'layout-grid-inner')}>
                   <div className={styles.projectsDetails}>
                     <h6 className={clsx(styles.text, 'h6')}>{job.period}</h6>
-                    <h3 className={clsx(styles.text, styles.company, 'h3')}>{job.company}</h3>
-                    <h6 className={clsx(styles.text, styles.role, 'h6')}>{job.role}</h6>
-                    <div className={clsx(styles.text, styles.location, 'p-x')}>{job.location}</div>
-                    <div className={clsx(styles.text, styles.desc, 'p-l')}>{job.desc}</div>
+                    <h3 className={clsx(styles.text, styles.company, 'h3')}>
+                      {job.company}
+                    </h3>
+                    <h6 className={clsx(styles.text, styles.role, 'h6')}>
+                      {job.role}
+                    </h6>
+                    <div className={clsx(styles.text, styles.location, 'p-x')}>
+                      {job.location}
+                    </div>
+                    <div className={clsx(styles.text, styles.desc, 'p-l')}>
+                      {job.desc}
+                    </div>
                   </div>
                   {/* Sharp artwork in the framed thumbnail; the blurred variant is the
                       full-bleed layer below, so the two never fight for attention. */}
                   <div className={styles.imageContainer}>
-                    <Image sizes="50vw" src={job.image} fill alt={`${job.company} artwork`} />
+                    <Image
+                      sizes="50vw"
+                      src={job.image}
+                      fill
+                      alt={`${job.company} artwork`}
+                    />
                   </div>
                 </div>
               </div>
-              <div ref={(el) => (cardRefs.current[index] = el)} className={styles.canvas}>
+              <div
+                ref={(el) => (cardRefs.current[index] = el)}
+                className={styles.canvas}
+              >
                 <Image
                   priority={index === 0}
                   loading={index === 0 ? undefined : 'lazy'}
                   sizes="100vw"
-                  className={index === 0 ? styles.firstCard : index === experience.length - 1 ? styles.lastCard : undefined}
+                  className={
+                    index === 0
+                      ? styles.firstCard
+                      : index === experience.length - 1
+                        ? styles.lastCard
+                        : undefined
+                  }
                   src={job.imageBlur}
                   fill
                   alt=""

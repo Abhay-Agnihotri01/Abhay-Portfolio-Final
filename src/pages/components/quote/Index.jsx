@@ -16,7 +16,8 @@ function Quote() {
       <h3 ref={textRef} className={clsx(styles.text, 'h3')}>
         {!isLoading && (
           <TextOpacity textRef={textRef.current} trigger={rootRef.current}>
-            &ldquo;Dreams are not what you see in your sleep, dreams are things which do not let you sleep.&rdquo;
+            &ldquo;Dreams are not what you see in your sleep, dreams are things
+            which do not let you sleep.&rdquo;
           </TextOpacity>
         )}
         {/* <div className={clsx(styles.attribution, 'p-l')}>Attribution &middot; Source, Year</div> */}

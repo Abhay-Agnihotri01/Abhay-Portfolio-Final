@@ -18,7 +18,11 @@ function ProjectDetails({ project }) {
         </div>
         {project.liveLink ? (
           <div className={styles.buttonContainer}>
-            <ButtonLink target href={project.liveLink} label="VISIT LIVE SITE" />
+            <ButtonLink
+              target
+              href={project.liveLink}
+              label="VISIT LIVE SITE"
+            />
           </div>
         ) : null}
       </div>

@@ -16,10 +16,12 @@
     display: block;
     width: 100%;
     border-radius: 9vw;
-    padding: calc(var(--layout-columns-gap) * 0.45) calc(var(--layout-columns-gap) * 0.6);
+    padding: calc(var(--layout-columns-gap) * 0.45)
+      calc(var(--layout-columns-gap) * 0.6);
     @include mobile {
       border-radius: 12vw;
-      padding: calc(var(--layout-columns-gap) * 0.3) calc(var(--layout-columns-gap) * 0.4);
+      padding: calc(var(--layout-columns-gap) * 0.3)
+        calc(var(--layout-columns-gap) * 0.4);
     }
   }
 
@@ -27,7 +29,9 @@
   // Cyrillic, and so on), name the fallbacks explicitly rather than leaving the
   // choice to each platform's default.
   .wordmark {
-    font-family: var(--font-primary), 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', sans-serif;
+    font-family:
+      var(--font-primary), 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC',
+      sans-serif;
     letter-spacing: 0.04em;
   }
 
