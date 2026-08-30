@@ -311,9 +311,8 @@ function Home() {
         <div className={styles.rightContainerMobile}>
           <h6 className="h6">
             {' '}
-            I&apos;m Your Name, a short description of your work. Two sentences
-            is the right length here. The second one gives a little more
-            context.
+            I&apos;m Abhay — a software developer working across AI, machine
+            learning, and full-stack development.
           </h6>
         </div>
       )}
