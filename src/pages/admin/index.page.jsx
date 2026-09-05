@@ -33,7 +33,14 @@ import {
   CheckCircle2,
   AlertCircle,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  Image as ImageIcon,
+  Camera,
+  Copy,
+  Check,
+  UploadCloud,
+  RefreshCw,
+  FileImage
 } from 'lucide-react';
 import defaultPortfolioData from '@src/data/defaultPortfolioData';
 import usePortfolioData from '@src/hooks/usePortfolioData';
@@ -66,6 +73,36 @@ export default function AdminPage() {
   // New item draft states
   const [newSkill, setNewSkill] = useState('');
   const fileInputRef = useRef(null);
+
+  // Photo & Media management state
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [mediaList, setMediaList] = useState([]);
+  const [loadingMedia, setLoadingMedia] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState(null);
+  const [selectedProjectForMedia, setSelectedProjectForMedia] = useState(0);
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
+
+  // Guarantee scrolling and text selection on admin page
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('admin-body');
+      document.documentElement.classList.add('admin-html');
+      document.body.style.overflow = 'auto';
+      document.body.style.maxHeight = 'none';
+      document.body.style.userSelect = 'auto';
+      document.documentElement.style.overflow = 'auto';
+
+      return () => {
+        document.body.classList.remove('admin-body');
+        document.documentElement.classList.remove('admin-html');
+        document.body.style.overflow = '';
+        document.body.style.maxHeight = '';
+        document.body.style.userSelect = '';
+        document.documentElement.style.overflow = '';
+      };
+    }
+    return undefined;
+  }, []);
 
   // Check existing session
   useEffect(() => {
@@ -237,6 +274,103 @@ export default function AdminPage() {
     } catch (err) {
       setRawJsonError(err.message);
       showToast('Invalid JSON syntax: ' + err.message, 'error');
+    }
+  };
+
+  // ----------------------------------------------------
+  // Photo & Media Handlers
+  // ----------------------------------------------------
+  const fetchMediaList = async () => {
+    setLoadingMedia(true);
+    try {
+      const res = await fetch('/api/admin/upload');
+      if (res.ok) {
+        const data = await res.json();
+        setMediaList(data.files || []);
+      }
+    } catch (err) {
+      // ignore
+    } finally {
+      setLoadingMedia(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchMediaList();
+    }
+  }, [isAuthenticated]);
+
+  const uploadImageFile = (file, onSuccess) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select an image file (PNG, JPG, WEBP, SVG)', 'error');
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      showToast('Image file size must be under 15MB', 'error');
+      return;
+    }
+
+    setUploadingImage(true);
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const base64Data = e.target.result;
+        const res = await fetch('/api/admin/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            filename: file.name,
+            data: base64Data,
+            token,
+          }),
+        });
+
+        const result = await res.json();
+        if (res.ok && result.success) {
+          showToast(`Photo "${file.name}" uploaded successfully!`);
+          if (onSuccess) onSuccess(result.url);
+          setHasChanges(true);
+          fetchMediaList();
+        } else {
+          showToast(result.error || 'Failed to upload photo.', 'error');
+        }
+      } catch (err) {
+        showToast('Error uploading photo: ' + err.message, 'error');
+      } finally {
+        setUploadingImage(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDeleteMedia = async (filename) => {
+    if (!window.confirm(`Are you sure you want to delete ${filename}?`)) return;
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, token }),
+      });
+      const resData = await res.json();
+      if (res.ok && resData.success) {
+        showToast(`Deleted ${filename}`);
+        fetchMediaList();
+      } else {
+        showToast(resData.error || 'Failed to delete file', 'error');
+      }
+    } catch (err) {
+      showToast('Error deleting file: ' + err.message, 'error');
+    }
+  };
+
+  const copyToClipboard = (text) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedUrl(text);
+      setTimeout(() => setCopiedUrl(null), 2500);
+      showToast(`Copied path: ${text}`);
     }
   };
 
@@ -729,6 +863,14 @@ export default function AdminPage() {
           </button>
 
           <button
+            className={`${styles.tabItem} ${activeTab === 'media' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('media')}
+          >
+            <ImageIcon size={15} />
+            <span>Photos & Media</span>
+          </button>
+
+          <button
             className={`${styles.tabItem} ${activeTab === 'projects' ? styles.activeTab : ''}`}
             onClick={() => setActiveTab('projects')}
           >
@@ -796,6 +938,142 @@ export default function AdminPage() {
                 <div>
                   <h2>Profile Identity & Story</h2>
                   <p>Customize your personal branding, bio headlines, and storytelling paragraphs</p>
+                </div>
+              </div>
+
+              {/* Profile Photos Card */}
+              <div className={styles.cardBox}>
+                <div className={styles.cardBoxHeader}>
+                  <h3>
+                    <Camera size={16} /> Profile Photos & Visuals
+                  </h3>
+                  <span style={{ fontSize: 12, color: '#94a3b8' }}>
+                    Click &quot;Upload Photo&quot; to change portrait or 3D hero picture
+                  </span>
+                </div>
+
+                <div className={styles.gridTwo}>
+                  {/* Front Profile Photo */}
+                  <div className={styles.photoCard}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 600, fontSize: 13, color: '#f1f5f9' }}>
+                        Front Portrait Photo
+                      </span>
+                      <span className={styles.badgeActivePhoto}>Home About</span>
+                    </div>
+
+                    <div className={styles.photoPreviewBox}>
+                      <img
+                        src={formData.profile?.profileImageFront || '/profile/front.png'}
+                        alt="Front Portrait"
+                        onError={(e) => {
+                          e.currentTarget.src = '/profile/front.png';
+                        }}
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label style={{ fontSize: 11 }}>Image Path / URL</label>
+                      <input
+                        type="text"
+                        className={styles.inputField}
+                        value={formData.profile?.profileImageFront || ''}
+                        onChange={(e) => updateFormField('profile', 'profileImageFront', e.target.value)}
+                        placeholder="/profile/front.png or /uploads/..."
+                      />
+                    </div>
+
+                    <div className={styles.photoControls}>
+                      <label className={styles.btnPrimary} style={{ cursor: 'pointer', padding: '6px 14px', fontSize: 12 }}>
+                        <UploadCloud size={14} />
+                        <span>{uploadingImage ? 'Uploading...' : 'Upload Photo'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          disabled={uploadingImage}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              uploadImageFile(file, (url) => {
+                                updateFormField('profile', 'profileImageFront', url);
+                              });
+                            }
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className={styles.btnSecondary}
+                        style={{ padding: '6px 12px', fontSize: 12 }}
+                        onClick={() => updateFormField('profile', 'profileImageFront', '/profile/front.png')}
+                      >
+                        Reset Default
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Back Profile / 3D Portal Photo */}
+                  <div className={styles.photoCard}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 600, fontSize: 13, color: '#f1f5f9' }}>
+                        About Page 3D Portal Photo
+                      </span>
+                      <span className={styles.badgeBackPhoto}>About Hero</span>
+                    </div>
+
+                    <div className={styles.photoPreviewBox}>
+                      <img
+                        src={formData.profile?.profileImageBack || '/profile/back.png'}
+                        alt="About 3D Hero"
+                        onError={(e) => {
+                          e.currentTarget.src = '/profile/back.png';
+                        }}
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label style={{ fontSize: 11 }}>Image Path / URL</label>
+                      <input
+                        type="text"
+                        className={styles.inputField}
+                        value={formData.profile?.profileImageBack || ''}
+                        onChange={(e) => updateFormField('profile', 'profileImageBack', e.target.value)}
+                        placeholder="/profile/back.png or /uploads/..."
+                      />
+                    </div>
+
+                    <div className={styles.photoControls}>
+                      <label className={styles.btnPrimary} style={{ cursor: 'pointer', padding: '6px 14px', fontSize: 12 }}>
+                        <UploadCloud size={14} />
+                        <span>{uploadingImage ? 'Uploading...' : 'Upload Photo'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          disabled={uploadingImage}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              uploadImageFile(file, (url) => {
+                                updateFormField('profile', 'profileImageBack', url);
+                              });
+                            }
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className={styles.btnSecondary}
+                        style={{ padding: '6px 12px', fontSize: 12 }}
+                        onClick={() => updateFormField('profile', 'profileImageBack', '/profile/back.png')}
+                      >
+                        Reset Default
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1050,6 +1328,580 @@ export default function AdminPage() {
           )}
 
           {/* ---------------------------------------------------- */}
+          {/* TAB: PHOTOS & MEDIA STUDIO                           */}
+          {/* ---------------------------------------------------- */}
+          {activeTab === 'media' && (
+            <div>
+              <div className={styles.sectionHeader}>
+                <div>
+                  <h2>Photo Studio & Media Manager</h2>
+                  <p>Upload, preview, and update profile portraits, 3D hero pictures, and project images</p>
+                </div>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                  <button
+                    type="button"
+                    className={styles.btnSecondary}
+                    onClick={fetchMediaList}
+                    title="Refresh media files"
+                  >
+                    <RefreshCw size={14} className={loadingMedia ? styles.uploadingSpinner : ''} />
+                    <span>Refresh</span>
+                  </button>
+                  <span style={{ fontSize: 12, color: '#94a3b8' }}>
+                    {mediaList.length} Uploaded Asset{mediaList.length === 1 ? '' : 's'}
+                  </span>
+                </div>
+              </div>
+
+              {/* 1. Core Profile Photos Studio */}
+              <div className={styles.cardBox}>
+                <div className={styles.cardBoxHeader}>
+                  <h3>
+                    <Camera size={16} /> Profile &amp; 3D Hero Photos
+                  </h3>
+                  <span style={{ fontSize: 12, color: '#94a3b8' }}>
+                    Live portraits displayed on the Homepage and About 3D portal
+                  </span>
+                </div>
+
+                <div className={styles.gridTwo}>
+                  {/* Front Profile Photo */}
+                  <div className={styles.photoCard}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <span style={{ fontWeight: 700, fontSize: 13, color: '#f1f5f9', display: 'block' }}>
+                          Front Portrait Photo
+                        </span>
+                        <span style={{ fontSize: 11, color: '#94a3b8' }}>
+                          Shown on Homepage About card
+                        </span>
+                      </div>
+                      <span className={styles.badgeActivePhoto}>Home Portrait</span>
+                    </div>
+
+                    <div className={styles.photoPreviewBox}>
+                      {formData.profile?.profileImageFront ? (
+                        <img
+                          src={formData.profile.profileImageFront}
+                          alt="Front Portrait Preview"
+                          onError={(e) => {
+                            e.currentTarget.src = '/profile/front.png';
+                          }}
+                        />
+                      ) : (
+                        <div className={styles.emptyPhotoPlaceholder}>
+                          <FileImage size={32} />
+                          <span>No photo selected</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label style={{ fontSize: 11 }}>Photo Path or Public URL</label>
+                      <input
+                        type="text"
+                        className={styles.inputField}
+                        value={formData.profile?.profileImageFront || ''}
+                        onChange={(e) => updateFormField('profile', 'profileImageFront', e.target.value)}
+                        placeholder="/profile/front.png or /uploads/..."
+                      />
+                    </div>
+
+                    <div className={styles.photoControls}>
+                      <label className={styles.btnPrimary} style={{ cursor: 'pointer', padding: '7px 14px', fontSize: 12 }}>
+                        <UploadCloud size={14} />
+                        <span>{uploadingImage ? 'Uploading...' : 'Upload New Portrait'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          disabled={uploadingImage}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              uploadImageFile(file, (url) => {
+                                updateFormField('profile', 'profileImageFront', url);
+                              });
+                            }
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+
+                      <button
+                        type="button"
+                        className={styles.btnSecondary}
+                        style={{ padding: '7px 12px', fontSize: 12 }}
+                        onClick={() => {
+                          updateFormField('profile', 'profileImageFront', '/profile/front.png');
+                          showToast('Reset front portrait to default');
+                        }}
+                      >
+                        Reset Default
+                      </button>
+
+                      {formData.profile?.profileImageFront && (
+                        <button
+                          type="button"
+                          className={styles.btnSecondary}
+                          style={{ padding: '7px 10px', fontSize: 12 }}
+                          onClick={() => copyToClipboard(formData.profile.profileImageFront)}
+                          title="Copy image URL"
+                        >
+                          {copiedUrl === formData.profile.profileImageFront ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Back Profile / About Hero Photo */}
+                  <div className={styles.photoCard}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <span style={{ fontWeight: 700, fontSize: 13, color: '#f1f5f9', display: 'block' }}>
+                          About 3D Portal Hero Photo
+                        </span>
+                        <span style={{ fontSize: 11, color: '#94a3b8' }}>
+                          Shown in the 3D portal on the About page
+                        </span>
+                      </div>
+                      <span className={styles.badgeBackPhoto}>About 3D Hero</span>
+                    </div>
+
+                    <div className={styles.photoPreviewBox}>
+                      {formData.profile?.profileImageBack ? (
+                        <img
+                          src={formData.profile.profileImageBack}
+                          alt="About Hero Preview"
+                          onError={(e) => {
+                            e.currentTarget.src = '/profile/back.png';
+                          }}
+                        />
+                      ) : (
+                        <div className={styles.emptyPhotoPlaceholder}>
+                          <FileImage size={32} />
+                          <span>No photo selected</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label style={{ fontSize: 11 }}>Photo Path or Public URL</label>
+                      <input
+                        type="text"
+                        className={styles.inputField}
+                        value={formData.profile?.profileImageBack || ''}
+                        onChange={(e) => updateFormField('profile', 'profileImageBack', e.target.value)}
+                        placeholder="/profile/back.png or /uploads/..."
+                      />
+                    </div>
+
+                    <div className={styles.photoControls}>
+                      <label className={styles.btnPrimary} style={{ cursor: 'pointer', padding: '7px 14px', fontSize: 12 }}>
+                        <UploadCloud size={14} />
+                        <span>{uploadingImage ? 'Uploading...' : 'Upload New Hero Photo'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          disabled={uploadingImage}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              uploadImageFile(file, (url) => {
+                                updateFormField('profile', 'profileImageBack', url);
+                              });
+                            }
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+
+                      <button
+                        type="button"
+                        className={styles.btnSecondary}
+                        style={{ padding: '7px 12px', fontSize: 12 }}
+                        onClick={() => {
+                          updateFormField('profile', 'profileImageBack', '/profile/back.png');
+                          showToast('Reset 3D hero to default');
+                        }}
+                      >
+                        Reset Default
+                      </button>
+
+                      {formData.profile?.profileImageBack && (
+                        <button
+                          type="button"
+                          className={styles.btnSecondary}
+                          style={{ padding: '7px 10px', fontSize: 12 }}
+                          onClick={() => copyToClipboard(formData.profile.profileImageBack)}
+                          title="Copy image URL"
+                        >
+                          {copiedUrl === formData.profile.profileImageBack ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Direct Drag-and-Drop Photo Uploader */}
+              <div className={styles.cardBox}>
+                <div className={styles.cardBoxHeader}>
+                  <h3>
+                    <UploadCloud size={16} /> Quick Photo Uploader
+                  </h3>
+                  <span style={{ fontSize: 12, color: '#94a3b8' }}>
+                    Upload any photo directly to /public/uploads/ from your computer
+                  </span>
+                </div>
+
+                <div
+                  className={`${styles.uploadDropzone} ${isDraggingFile ? styles.dragging : ''}`}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDraggingFile(true);
+                  }}
+                  onDragLeave={() => setIsDraggingFile(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDraggingFile(false);
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) {
+                      uploadImageFile(file);
+                    }
+                  }}
+                  onClick={() => {
+                    const input = document.getElementById('quick-photo-uploader-input');
+                    if (input) input.click();
+                  }}
+                >
+                  <div className={styles.dropzoneIcon}>
+                    <Camera size={22} />
+                  </div>
+                  <h4>Drag and drop a photo here, or click to browse</h4>
+                  <p>Supports PNG, JPG, JPEG, WEBP, SVG (Max 15MB)</p>
+                  <input
+                    id="quick-photo-uploader-input"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) uploadImageFile(file);
+                      e.target.value = '';
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* 3. Project Photos Quick Switcher */}
+              <div className={styles.cardBox}>
+                <div className={styles.cardBoxHeader}>
+                  <h3>
+                    <FolderGit2 size={16} /> Project Cover &amp; Screenshots Studio
+                  </h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: 12, color: '#94a3b8' }}>Select Project:</span>
+                    <select
+                      className={styles.selectField}
+                      value={selectedProjectForMedia}
+                      onChange={(e) => setSelectedProjectForMedia(Number(e.target.value))}
+                      style={{ width: 220 }}
+                    >
+                      {(formData.projects || []).map((p, idx) => (
+                        <option key={p.id || idx} value={idx}>
+                          #{idx + 1} {p.title || p.id}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {formData.projects?.[selectedProjectForMedia] && (
+                  <div>
+                    {/* Selected Project Cover */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 16, alignItems: 'center', background: '#0c0f16', padding: 16, borderRadius: 8, marginBottom: 16 }}>
+                      <div style={{ width: 180, height: 110, background: '#06080d', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #1f2737' }}>
+                        {formData.projects[selectedProjectForMedia].img ? (
+                          <img
+                            src={formData.projects[selectedProjectForMedia].img}
+                            alt="Cover"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <span style={{ fontSize: 11, color: '#64748b' }}>No Cover Image</span>
+                        )}
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontWeight: 700, fontSize: 14, color: '#f1f5f9' }}>
+                            {formData.projects[selectedProjectForMedia].title} Cover Photo
+                          </span>
+                          <span style={{ fontSize: 11, color: '#60a5fa', background: '#1e293b', padding: '2px 6px', borderRadius: 4 }}>
+                            /{formData.projects[selectedProjectForMedia].id}
+                          </span>
+                        </div>
+
+                        <div className={styles.formGroup} style={{ margin: 0 }}>
+                          <input
+                            type="text"
+                            className={styles.inputField}
+                            value={formData.projects[selectedProjectForMedia].img || ''}
+                            onChange={(e) => handleUpdateProject(selectedProjectForMedia, 'img', e.target.value)}
+                            placeholder="Cover image path or URL"
+                          />
+                        </div>
+
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <label className={styles.btnPrimary} style={{ cursor: 'pointer', padding: '6px 12px', fontSize: 12 }}>
+                            <UploadCloud size={13} />
+                            <span>Upload New Cover</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              style={{ display: 'none' }}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  uploadImageFile(file, (url) => {
+                                    handleUpdateProject(selectedProjectForMedia, 'img', url);
+                                  });
+                                }
+                                e.target.value = '';
+                              }}
+                            />
+                          </label>
+
+                          {formData.projects[selectedProjectForMedia].img && (
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              style={{ padding: '6px 10px', fontSize: 12 }}
+                              onClick={() => copyToClipboard(formData.projects[selectedProjectForMedia].img)}
+                            >
+                              Copy Path
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Gallery Screenshots */}
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0' }}>
+                          Gallery Screenshots ({formData.projects[selectedProjectForMedia].images?.length || 0})
+                        </span>
+
+                        <label className={styles.btnSecondary} style={{ cursor: 'pointer', padding: '5px 10px', fontSize: 12 }}>
+                          <Plus size={13} />
+                          <span>Upload &amp; Add Screenshot</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                uploadImageFile(file, (url) => {
+                                  const currentImages = formData.projects[selectedProjectForMedia].images || [];
+                                  handleUpdateProject(selectedProjectForMedia, 'images', [
+                                    ...currentImages,
+                                    { src: url, tag: 'big', isRight: false },
+                                  ]);
+                                });
+                              }
+                              e.target.value = '';
+                            }}
+                          />
+                        </label>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
+                        {(formData.projects[selectedProjectForMedia].images || []).map((imgItem, imgIdx) => (
+                          <div key={imgIdx} style={{ background: '#090c12', border: '1px solid #1e2637', borderRadius: 8, overflow: 'hidden', padding: 8 }}>
+                            <div style={{ height: 90, background: '#000', borderRadius: 4, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 6 }}>
+                              <img
+                                src={imgItem.src}
+                                alt={`Screenshot ${imgIdx + 1}`}
+                                style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                              />
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <span style={{ fontSize: 11, color: '#94a3b8' }}>#{imgIdx + 1} ({imgItem.tag})</span>
+                              <button
+                                type="button"
+                                className={`${styles.btnSecondary} ${styles.deleteBtn}`}
+                                style={{ padding: '3px 6px', color: '#f87171' }}
+                                onClick={() => {
+                                  const images = [...formData.projects[selectedProjectForMedia].images];
+                                  images.splice(imgIdx, 1);
+                                  handleUpdateProject(selectedProjectForMedia, 'images', images);
+                                }}
+                                title="Remove screenshot"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 4. Portfolio Media Library & Uploads Grid */}
+              <div className={styles.cardBox}>
+                <div className={styles.cardBoxHeader}>
+                  <h3>
+                    <ImageIcon size={16} /> Portfolio Media Library
+                  </h3>
+                  <span style={{ fontSize: 12, color: '#94a3b8' }}>
+                    Click any action to quickly assign a photo to your profile or copy its link
+                  </span>
+                </div>
+
+                <div className={styles.mediaGrid}>
+                  {/* Preset Built-in Photos */}
+                  {[
+                    { name: 'front.png (Default Portrait)', url: '/profile/front.png', preset: true },
+                    { name: 'back.png (Default 3D Hero)', url: '/profile/back.png', preset: true },
+                    { name: 'LinkLytics Cover', url: '/projects/linklytics/cover.png', preset: true },
+                    { name: 'ResuMind Cover', url: '/projects/resumind/cover.png', preset: true },
+                    { name: 'Election Analysis Cover', url: '/projects/election-analysis-2024/cover.png', preset: true },
+                    { name: 'Movie Recommender Cover', url: '/projects/movie-recommender/cover.png', preset: true },
+                    { name: 'Role Badge Artwork', url: '/roles/1.png', preset: true },
+                  ].map((item, idx) => {
+                    const isFront = formData.profile?.profileImageFront === item.url;
+                    const isBack = formData.profile?.profileImageBack === item.url;
+
+                    return (
+                      <div key={`preset-${idx}`} className={styles.mediaItem}>
+                        <div className={styles.mediaThumbnail}>
+                          <img src={item.url} alt={item.name} />
+                        </div>
+                        <div className={styles.mediaInfo}>
+                          <span className={styles.mediaName} title={item.name}>{item.name}</span>
+                          <div className={styles.mediaMeta}>
+                            <span>Preset Portfolio Asset</span>
+                            {isFront && <span className={styles.badgeActivePhoto}>Active Front</span>}
+                            {isBack && <span className={styles.badgeBackPhoto}>Active Hero</span>}
+                          </div>
+                        </div>
+                        <div className={styles.mediaActions}>
+                          <div style={{ display: 'flex', gap: 4 }}>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              style={{ flex: 1, padding: '4px 6px', fontSize: 11 }}
+                              onClick={() => {
+                                updateFormField('profile', 'profileImageFront', item.url);
+                                showToast('Set as Front Portrait');
+                              }}
+                            >
+                              Set Front
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              style={{ flex: 1, padding: '4px 6px', fontSize: 11 }}
+                              onClick={() => {
+                                updateFormField('profile', 'profileImageBack', item.url);
+                                showToast('Set as About Hero');
+                              }}
+                            >
+                              Set Hero
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            className={styles.btnSecondary}
+                            style={{ padding: '4px 6px', fontSize: 11 }}
+                            onClick={() => copyToClipboard(item.url)}
+                          >
+                            Copy URL
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Uploaded Photos */}
+                  {mediaList.map((item, idx) => {
+                    const isFront = formData.profile?.profileImageFront === item.url;
+                    const isBack = formData.profile?.profileImageBack === item.url;
+                    const sizeKb = Math.round(item.size / 1024);
+
+                    return (
+                      <div key={`upload-${idx}`} className={styles.mediaItem}>
+                        <div className={styles.mediaThumbnail}>
+                          <img src={item.url} alt={item.name} />
+                        </div>
+                        <div className={styles.mediaInfo}>
+                          <span className={styles.mediaName} title={item.name}>{item.name}</span>
+                          <div className={styles.mediaMeta}>
+                            <span>{sizeKb} KB</span>
+                            {isFront && <span className={styles.badgeActivePhoto}>Active Front</span>}
+                            {isBack && <span className={styles.badgeBackPhoto}>Active Hero</span>}
+                          </div>
+                        </div>
+                        <div className={styles.mediaActions}>
+                          <div style={{ display: 'flex', gap: 4 }}>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              style={{ flex: 1, padding: '4px 6px', fontSize: 11 }}
+                              onClick={() => {
+                                updateFormField('profile', 'profileImageFront', item.url);
+                                showToast('Set as Front Portrait');
+                              }}
+                            >
+                              Set Front
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              style={{ flex: 1, padding: '4px 6px', fontSize: 11 }}
+                              onClick={() => {
+                                updateFormField('profile', 'profileImageBack', item.url);
+                                showToast('Set as About Hero');
+                              }}
+                            >
+                              Set Hero
+                            </button>
+                          </div>
+                          <div style={{ display: 'flex', gap: 4 }}>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              style={{ flex: 2, padding: '4px 6px', fontSize: 11 }}
+                              onClick={() => copyToClipboard(item.url)}
+                            >
+                              Copy URL
+                            </button>
+                            <button
+                              type="button"
+                              className={`${styles.btnSecondary} ${styles.deleteBtn}`}
+                              style={{ flex: 1, padding: '4px 6px', fontSize: 11, color: '#f87171' }}
+                              onClick={() => handleDeleteMedia(item.name)}
+                              title="Delete file from server"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ---------------------------------------------------- */}
           {/* TAB 2: PROJECTS */}
           {/* ---------------------------------------------------- */}
           {activeTab === 'projects' && (
@@ -1156,13 +2008,48 @@ export default function AdminPage() {
                       </div>
 
                       <div className={styles.formGroup}>
-                        <label>Cover Image Path / URL</label>
-                        <input
-                          type="text"
-                          className={styles.inputField}
-                          value={project.img || ''}
-                          onChange={(e) => handleUpdateProject(idx, 'img', e.target.value)}
-                        />
+                        <label>Cover Image &amp; Artwork</label>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <div className={styles.smallThumbPreview}>
+                            {project.img ? (
+                              <img
+                                src={project.img}
+                                alt="Cover"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/projects/linklytics/cover.png';
+                                }}
+                              />
+                            ) : (
+                              <FileImage size={18} color="#64748b" />
+                            )}
+                          </div>
+                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                            <input
+                              type="text"
+                              className={styles.inputField}
+                              value={project.img || ''}
+                              onChange={(e) => handleUpdateProject(idx, 'img', e.target.value)}
+                              placeholder="/projects/... or /uploads/..."
+                            />
+                            <label className={styles.btnSecondary} style={{ cursor: 'pointer', padding: '4px 8px', fontSize: 11, width: 'fit-content' }}>
+                              <Camera size={12} /> Upload Cover
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    uploadImageFile(file, (url) => {
+                                      handleUpdateProject(idx, 'img', url);
+                                    });
+                                  }
+                                  e.target.value = '';
+                                }}
+                              />
+                            </label>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -1278,25 +2165,62 @@ export default function AdminPage() {
                         <label style={{ fontSize: 12, fontWeight: 600, color: '#cbd5e1' }}>
                           Gallery Images ({project.images?.length || 0})
                         </label>
-                        <button
-                          type="button"
-                          className={styles.btnSecondary}
-                          style={{ padding: '4px 8px', fontSize: 11 }}
-                          onClick={() => {
-                            const images = [
-                              ...(project.images || []),
-                              { src: '/projects/linklytics/1.png', tag: 'medium', isRight: false }
-                            ];
-                            handleUpdateProject(idx, 'images', images);
-                          }}
-                        >
-                          <Plus size={11} /> Add Image
-                        </button>
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <label className={styles.btnPrimary} style={{ cursor: 'pointer', padding: '4px 8px', fontSize: 11 }}>
+                            <UploadCloud size={11} /> Upload Screenshot
+                            <input
+                              type="file"
+                              accept="image/*"
+                              style={{ display: 'none' }}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  uploadImageFile(file, (url) => {
+                                    const images = [
+                                      ...(project.images || []),
+                                      { src: url, tag: 'big', isRight: false }
+                                    ];
+                                    handleUpdateProject(idx, 'images', images);
+                                  });
+                                }
+                                e.target.value = '';
+                              }}
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            className={styles.btnSecondary}
+                            style={{ padding: '4px 8px', fontSize: 11 }}
+                            onClick={() => {
+                              const images = [
+                                ...(project.images || []),
+                                { src: '/projects/linklytics/1.png', tag: 'medium', isRight: false }
+                              ];
+                              handleUpdateProject(idx, 'images', images);
+                            }}
+                          >
+                            <Plus size={11} /> Add Path
+                          </button>
+                        </div>
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {(project.images || []).map((imgObj, imgIdx) => (
                           <div key={imgIdx} style={{ display: 'flex', gap: 8, alignItems: 'center', background: '#0a0d14', padding: 8, borderRadius: 6 }}>
+                            <div style={{ width: 44, height: 44, minWidth: 44, background: '#000', borderRadius: 4, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #1f2737' }}>
+                              {imgObj.src ? (
+                                <img
+                                  src={imgObj.src}
+                                  alt=""
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              ) : (
+                                <FileImage size={14} color="#64748b" />
+                              )}
+                            </div>
                             <input
                               type="text"
                               className={styles.inputField}
@@ -1309,6 +2233,25 @@ export default function AdminPage() {
                                 handleUpdateProject(idx, 'images', images);
                               }}
                             />
+                            <label className={styles.btnSecondary} style={{ cursor: 'pointer', padding: '6px 8px' }} title="Replace with uploaded photo">
+                              <Camera size={13} />
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    uploadImageFile(file, (url) => {
+                                      const images = [...project.images];
+                                      images[imgIdx] = { ...images[imgIdx], src: url };
+                                      handleUpdateProject(idx, 'images', images);
+                                    });
+                                  }
+                                  e.target.value = '';
+                                }}
+                              />
+                            </label>
                             <select
                               className={styles.selectField}
                               style={{ width: 110 }}

@@ -15,7 +15,9 @@ const nextConfig = {
   // },
   reactStrictMode: false, // Recommended for the `pages` directory, default in `app`.
 
-  images: {},
+  images: {
+    unoptimized: true,
+  },
   webpack(config, { isServer }) {
     // config.resolve.alias = {
     //   ...config.resolve.alias,

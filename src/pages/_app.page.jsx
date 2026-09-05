@@ -58,7 +58,17 @@ function MyApp({ Component, pageProps, router }) {
   });
 
   useIsomorphicLayoutEffect(() => {
-    if (isAdminRoute) return undefined;
+    if (isAdminRoute) {
+      document.body.classList.add('admin-body');
+      document.documentElement.classList.add('admin-html');
+      return () => {
+        document.body.classList.remove('admin-body');
+        document.documentElement.classList.remove('admin-html');
+      };
+    }
+
+    document.body.classList.remove('admin-body');
+    document.documentElement.classList.remove('admin-html');
 
     // eslint-disable-next-line no-shadow
     const lenis = new Lenis({

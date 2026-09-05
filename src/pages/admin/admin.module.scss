@@ -1,7 +1,18 @@
 /* Admin Panel Stylesheet */
 
 .adminRoot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
   background-color: #0b0d11;
   color: #f0f4f1;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -9,10 +20,33 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  overflow-x: hidden;
+  z-index: 999999;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #3b82f6 #11141c;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #11141c;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #2b354c;
+    border-radius: 4px;
+    border: 2px solid #11141c;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6;
+  }
 
   * {
     box-sizing: border-box;
+    user-select: text;
+    -webkit-user-select: text;
   }
 }
 
@@ -359,7 +393,11 @@
 
 /* Tabs Bar */
 .tabsNav {
-  background: #10131a;
+  position: sticky;
+  top: 57px;
+  z-index: 90;
+  background: rgba(16, 19, 26, 0.95);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid #1c2230;
   padding: 4px 24px;
   display: flex;
@@ -405,7 +443,7 @@
 /* Content Area */
 .mainContent {
   flex: 1;
-  padding: 24px;
+  padding: 24px 24px 120px 24px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -699,3 +737,226 @@
   padding: 2px 8px;
   border-radius: 4px;
 }
+
+/* ======================================================== */
+/* Photo & Media Management Styles                         */
+/* ======================================================== */
+
+.photoCard {
+  background: #10141d;
+  border: 1px solid #1f2737;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: #2e3a52;
+  }
+}
+
+.photoPreviewBox {
+  width: 100%;
+  height: 240px;
+  background: #090b0f;
+  border: 1px solid #1c2230;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+
+  .emptyPhotoPlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 12px;
+  }
+}
+
+.photoControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.uploadDropzone {
+  border: 2px dashed #243048;
+  background: #0d1117;
+  border-radius: 12px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover,
+  &.dragging {
+    border-color: #3b82f6;
+    background: #111827;
+  }
+
+  .dropzoneIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #172134;
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.mediaItem {
+  background: #10141d;
+  border: 1px solid #1e2637;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+  }
+
+  .mediaThumbnail {
+    width: 100%;
+    height: 140px;
+    background: #090c12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .mediaInfo {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+
+    .mediaName {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e2e8f0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mediaMeta {
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .mediaActions {
+    padding: 8px 12px 10px 12px;
+    border-top: 1px solid #1a2130;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+.badgeActivePhoto {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #1e3a8a;
+  color: #bfdbfe;
+  border: 1px solid #2563eb;
+}
+
+.badgeBackPhoto {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #3b1e54;
+  color: #f3e8ff;
+  border: 1px solid #9333ea;
+}
+
+.smallThumbPreview {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 6px;
+  background: #090c12;
+  border: 1px solid #243048;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
