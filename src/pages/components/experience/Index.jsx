@@ -3,7 +3,7 @@
 import AppearByWords from '@src/components/animationComponents/appearByWords/Index';
 import Image from 'next/image';
 import clsx from 'clsx';
-import experience from '@src/constants/experience';
+import defaultExperience from '@src/constants/experience';
 import { gsap } from 'gsap';
 import styles from '@src/pages/components/experience/styles/experience.module.scss';
 import useIsMobile from '@src/hooks/useIsMobile';
@@ -12,11 +12,14 @@ import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useStore } from '@src/store';
 import { useWindowSize } from '@darkroom.engineering/hamo';
+import usePortfolioData from '@src/hooks/usePortfolioData';
 
 function Experience() {
   const isMobile = useIsMobile();
   const windowSize = useWindowSize();
   const [isLoading] = useStore(useShallow((state) => [state.isLoading]));
+  const { data } = usePortfolioData();
+  const experience = data?.experience || defaultExperience;
 
   const rootRef = useRef();
   const cardRefs = useRef([]);

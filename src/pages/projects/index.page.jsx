@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
-import projects from '@src/constants/projects';
+import defaultProjects from '@src/constants/projects';
 import styles from '@src/pages/projects/projects.module.scss';
 import useIsMobile from '@src/hooks/useIsMobile';
 import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
@@ -14,6 +14,7 @@ import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useStore } from '@src/store';
 import { useWindowSize } from '@darkroom.engineering/hamo';
+import usePortfolioData from '@src/hooks/usePortfolioData';
 
 const seo = {
   title: 'Abhay Agnihotri - Projects',
@@ -37,6 +38,8 @@ function Page() {
   const rootRef = useRef();
   const projectRefs = useRef([]);
   const [isLoading] = useStore(useShallow((state) => [state.isLoading]));
+  const { data } = usePortfolioData();
+  const projects = data?.projects || defaultProjects;
 
   const setupProjectAnimations = () => {
     const ctx = gsap.context(() => {

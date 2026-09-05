@@ -6,9 +6,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000 -H 0.0.0.0",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000 -H 0.0.0.0",
     "postbuild": "next-sitemap",
     "lint": "next lint"
   },
@@ -50,6 +50,7 @@
     "clsx": "^2.0.0",
     "gsap": "^3.12.5",
     "lenis": "^1.1.6",
+    "lucide-react": "^1.41.0",
     "next": "^14.2.35",
     "next-seo": "^6.5.0",
     "prop-types": "^15.8.1",

@@ -42,6 +42,8 @@ if (typeof window !== 'undefined') {
 }
 
 function MyApp({ Component, pageProps, router }) {
+  const isAdminRoute = router?.pathname?.startsWith('/admin');
+
   const [lenis, setLenis, isAbout] = useStore(
     useShallow((state) => [state.lenis, state.setLenis, state.isAbout]),
   );
@@ -51,9 +53,13 @@ function MyApp({ Component, pageProps, router }) {
   const layoutRef = useRef();
 
   useFoucFix();
-  useScroll(() => ScrollTrigger.update());
+  useScroll(() => {
+    if (!isAdminRoute) ScrollTrigger.update();
+  });
 
   useIsomorphicLayoutEffect(() => {
+    if (isAdminRoute) return undefined;
+
     // eslint-disable-next-line no-shadow
     const lenis = new Lenis({
       smoothWheel: true,
@@ -70,16 +76,16 @@ function MyApp({ Component, pageProps, router }) {
       lenis.destroy();
       setLenis(null);
     };
-  }, []);
+  }, [isAdminRoute]);
 
   useIsomorphicLayoutEffect(() => {
-    if (lenis) {
+    if (lenis && !isAdminRoute) {
       ScrollTrigger.refresh();
     }
-  }, [lenis]);
+  }, [lenis, isAdminRoute]);
 
   useFrame((time) => {
-    if (lenis) {
+    if (lenis && !isAdminRoute) {
       lenis.raf(time);
     }
   }, 0);
@@ -118,6 +124,10 @@ function MyApp({ Component, pageProps, router }) {
     ),
     [isAbout],
   );
+
+  if (isAdminRoute) {
+    return <Component {...pageProps} router={router} />;
+  }
 
   return (
     <div className={styles.root}>

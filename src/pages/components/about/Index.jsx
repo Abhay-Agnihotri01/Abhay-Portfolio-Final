@@ -7,11 +7,14 @@ import styles from '@src/pages/components/about/styles/about.module.scss';
 import useIsMobile from '@src/hooks/useIsMobile';
 import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
 import { useRef } from 'react';
+import usePortfolioData from '@src/hooks/usePortfolioData';
 
 function About() {
   const isMobile = useIsMobile();
   const rootRef = useRef();
   const animatedImageRef = useRef();
+  const { data } = usePortfolioData();
+  const profile = data?.profile || {};
 
   const setupScrollAnimation = () => {
     const ctx = gsap.context(() => {
@@ -44,7 +47,7 @@ function About() {
     <div className={styles.imageContainer}>
       <Image
         priority
-        src="/profile/front.png"
+        src={profile.profileImageFront || '/profile/front.png'}
         sizes="100%"
         fill
         alt="Portrait"
@@ -52,12 +55,19 @@ function About() {
     </div>
   );
 
+  const heroGreeting = profile.heroGreeting || "Hey, My name's Abhay Agnihotri!";
+  const heroQuote = profile.heroQuote || "“I don't want to simply follow the path that already exists. I want to keep learning, keep building, and leave something behind.”";
+  const bioParagraphs = profile.homeBio || [
+    "I'm a developer who enjoys turning ideas into thoughtful, useful digital experiences.",
+    "I'm curious by nature, always learning something new and looking for better ways to build.",
+    "For me, every project is another chance to grow."
+  ];
+
   return (
     <section ref={rootRef} className={styles.root}>
       <div className={clsx(styles.nameContainer, 'layout-block-inner')}>
         <AppearTitle>
-          <h1 className={clsx('h1', 'medium')}>Hey, My name&apos;s</h1>
-          <h1 className={clsx('h1', 'medium')}>Abhay Agnihotri!</h1>
+          <h1 className={clsx('h1', 'medium')}>{heroGreeting}</h1>
         </AppearTitle>
       </div>
 
@@ -65,44 +75,18 @@ function About() {
         {isMobile ? renderImageContainer() : null}
         <div className={clsx(styles.descWrapper)} ref={animatedImageRef}>
           <AppearTitle>
-            <div className="p-l">“I don&apos;t want to simply follow</div>
-            <div className="p-l">the path that already exists.</div>
-            <div className="p-l">I want to keep learning, keep building,</div>
-            <div className="p-l">and leave something behind.”</div>
+            <div className="p-l">{heroQuote}</div>
           </AppearTitle>
         </div>
         {!isMobile ? renderImageContainer() : null}
         <div className={clsx(styles.descWrapperBottom)}>
-          {!isMobile ? (
-            <AppearTitle key="desktop-descWrapperBottom">
-              <h6 className="h6">
-                I&apos;m a developer who enjoys turning ideas
+          <AppearTitle key="descWrapperBottom">
+            {bioParagraphs.map((paragraph, idx) => (
+              <h6 key={paragraph} className={clsx('h6', idx > 0 && styles.paddingTop)}>
+                {paragraph}
               </h6>
-              <h6 className="h6">
-                into thoughtful, useful digital experiences.
-              </h6>
-              <h6 className="h6">
-                I&apos;m curious by nature, always learning something
-              </h6>
-              <h6 className="h6">new and looking for better ways to build.</h6>
-              <h6 className="h6">
-                For me, every project is another chance to grow.
-              </h6>
-            </AppearTitle>
-          ) : (
-            <AppearTitle key="mobile-descWrapperBottom">
-              <h6 className="h6">
-                I&apos;m a developer who enjoys turning ideas into
-              </h6>
-              <h6 className="h6">
-                thoughtful, useful digital experiences. I&apos;m always
-              </h6>
-              <h6 className="h6">
-                learning, experimenting, and looking for better
-              </h6>
-              <h6 className="h6">ways to build and grow.</h6>
-            </AppearTitle>
-          )}
+            ))}
+          </AppearTitle>
           <div className={clsx(styles.buttonContainer)}>
             <ButtonLink href="/about" label="ABOUT ME" />
           </div>

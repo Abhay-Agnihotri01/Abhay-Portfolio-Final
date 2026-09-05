@@ -8,13 +8,14 @@ import ProjectImages from '@src/pages/projects/components/projectsImages/Project
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
-import projects from '@src/constants/projects';
+import defaultProjects from '@src/constants/projects';
 import styles from '@src/pages/projects/project.module.scss';
 import useIsMobile from '@src/hooks/useIsMobile';
 import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
 import { useShallow } from 'zustand/react/shallow';
 import { useStore } from '@src/store';
 import { useWindowSize } from '@darkroom.engineering/hamo';
+import usePortfolioData from '@src/hooks/usePortfolioData';
 
 function Page({ id }) {
   const isMobile = useIsMobile();
@@ -22,12 +23,17 @@ function Page({ id }) {
   const leftContainerRef = useRef();
   const [isLoading] = useStore(useShallow((state) => [state.isLoading]));
   const windowSize = useWindowSize();
+  const { data } = usePortfolioData();
+  const projectsList = data?.projects || defaultProjects;
 
   const projectIndex = useMemo(
-    () => projects.findIndex((project) => project.id === id),
-    [id],
+    () => {
+      const idx = projectsList.findIndex((project) => project.id === id);
+      return idx >= 0 ? idx : 0;
+    },
+    [id, projectsList],
   );
-  const currentProject = useMemo(() => projects[projectIndex], [projectIndex]);
+  const currentProject = useMemo(() => projectsList[projectIndex] || projectsList[0], [projectsList, projectIndex]);
 
   const updateCSSVariables = (project) => {
     gsap.set('html', {
@@ -110,9 +116,9 @@ function Page({ id }) {
       </section>
       <NextProject
         nextProject={
-          projectIndex === projects.length - 1
-            ? projects[0]
-            : projects[projectIndex + 1]
+          projectIndex === projectsList.length - 1
+            ? projectsList[0]
+            : projectsList[projectIndex + 1]
         }
       />
     </>
@@ -120,8 +126,8 @@ function Page({ id }) {
 }
 
 export async function getStaticPaths() {
-  const paths = projects.map((project) => ({ params: { id: project.id } }));
-  return { paths, fallback: false };
+  const paths = defaultProjects.map((project) => ({ params: { id: project.id } }));
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps(context) {

@@ -7,6 +7,7 @@ import { gsap } from 'gsap';
 import styles from '@src/pages/components/home/styles/home.module.scss';
 import useIsMobile from '@src/hooks/useIsMobile';
 import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
+import usePortfolioData from '@src/hooks/usePortfolioData';
 
 const moveRect = (rect, direction, gridWidth, gridHeight) => {
   const moveMap = {
@@ -100,6 +101,9 @@ function Home() {
   const svgRef = useRef();
   const divWrapper = useRef();
   const infiniteTextRef = useRef();
+  const { data } = usePortfolioData();
+  const profile = data?.profile || {};
+  const tagline = profile.tagline || "I'm Abhay — a software developer working across AI, machine learning, and full-stack development.";
 
   const initialPositions = useMemo(
     () =>
@@ -247,7 +251,9 @@ function Home() {
       initialPositions.map(({ index, x, y }) => (
         <rect
           key={index}
-          ref={(ref) => (rectRefs.current[index] = ref)}
+          ref={(ref) => {
+            rectRefs.current[index] = ref;
+          }}
           x={x}
           y={y}
           width={`${gridWidth}%`}
@@ -266,8 +272,7 @@ function Home() {
         </div>
         {!isMobile && (
           <h6 className={clsx('h6', styles.rightContainer)}>
-            I&apos;m Abhay — a software developer working across AI, machine
-            learning and full-stack development.
+            {tagline}
           </h6>
         )}
       </div>
@@ -310,9 +315,7 @@ function Home() {
       {isMobile && (
         <div className={styles.rightContainerMobile}>
           <h6 className="h6">
-            {' '}
-            I&apos;m Abhay — a software developer working across AI, machine
-            learning, and full-stack development.
+            {tagline}
           </h6>
         </div>
       )}

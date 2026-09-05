@@ -16,24 +16,32 @@ import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useStore } from '@src/store';
 import { useWindowSize } from '@darkroom.engineering/hamo';
+import usePortfolioData from '@src/hooks/usePortfolioData';
 
 const Time = dynamic(() => import('@src/components/dom/Time'), { ssr: false });
 const GoTop = dynamic(() => import('@src/components/dom/GoTop'), {
   ssr: false,
 });
 
-const EMAIL = 'abhayagnihotri976@gmail.com';
-
-// The social list is split across two columns so neither runs long.
-const CONNECT = footerLinks.slice(0, 4);
-// const ELSEWHERE = footerLinks.slice(4);
-// const ELSEWHERE = footerLinks.slice(0,4);
+const DEFAULT_EMAIL = 'abhayagnihotri976@gmail.com';
 
 function Footer() {
   const isMobile = useIsMobile();
   const footerRef = useRef();
   const [isLoading] = useStore(useShallow((state) => [state.isLoading]));
   const windowSize = useWindowSize();
+  const { data } = usePortfolioData();
+  const profile = data?.profile || {};
+  const email = profile.email || DEFAULT_EMAIL;
+  const location = profile.location || 'Lucknow, India';
+  const brandDesc = profile.brandDesc || 'Transforming complex data into intelligent products, predictive models, and seamless user experiences.';
+  const availability = profile.availability || 'Currently available for new work';
+  const copyright = profile.copyright || '© 2026 · Abhay Agnihotri · All Rights Reserved';
+  const socialLinks = data?.socialLinks || footerLinks;
+  const workLinks = data?.projects
+    ? data.projects.map((p) => ({ title: p.title, href: p.link || `/projects/${p.id}` }))
+    : projectsLinks;
+  const connectLinks = socialLinks.slice(0, 4);
 
   useIsomorphicLayoutEffect(() => {
     if (!isLoading) {
@@ -111,11 +119,10 @@ function Footer() {
                 Abhay Agnihotri
               </h4>
               <div className={clsx(styles.brandDesc, 'p-x')}>
-                Transforming complex data into intelligent products, predictive
-                models, and seamless user experiences.
+                {brandDesc}
               </div>
               <div className={clsx(styles.brandMeta, 'p-xs')}>
-                Lucknow, India · <Time />
+                {location} · <Time />
               </div>
             </AppearTitle>
           </div>
@@ -125,7 +132,7 @@ function Footer() {
               <Link
                 aria-label="Send email"
                 scroll={false}
-                href={`mailto:${EMAIL}`}
+                href={`mailto:${email}`}
                 className={styles.ctaButton}
               >
                 <span className="p-x">Get in touch</span>
@@ -140,9 +147,8 @@ function Footer() {
         {/* link columns */}
         <div className={styles.columns}>
           {renderColumn('SITEMAP', menuLinks.slice(0, -1))}
-          {renderColumn('WORK', projectsLinks)}
-          {renderColumn('CONNECT', CONNECT, true)}
-          {/* {renderColumn('ELSEWHERE', ELSEWHERE, true)} */}
+          {renderColumn('WORK', workLinks)}
+          {renderColumn('CONNECT', connectLinks, true)}
           <div className={styles.column}>
             <AppearTitle isFooter>
               <h6 className={clsx(styles.columnTitle, 'p-x')}>CONTACT</h6>
@@ -150,13 +156,13 @@ function Footer() {
                 <LinkText
                   className={styles.linkText}
                   title="Email"
-                  href={`mailto:${EMAIL}`}
+                  href={`mailto:${email}`}
                 >
-                  <span className="footer">{EMAIL}</span>
+                  <span className="footer">{email}</span>
                 </LinkText>
               </div>
               <div className={clsx(styles.availability, 'p-x')}>
-                Currently available for new work
+                {availability}
               </div>
             </AppearTitle>
           </div>
@@ -167,10 +173,10 @@ function Footer() {
         {/* bottom bar */}
         <div className={styles.bottom}>
           <div className={clsx(styles.copyright, 'p-xs')}>
-            © 2026 · Abhay Agnihotri · All Rights Reserved
+            {copyright}
           </div>
           <div className={styles.socialRow}>
-            {footerLinks.map((link) => (
+            {socialLinks.map((link) => (
               <a
                 key={link.title}
                 href={link.href}

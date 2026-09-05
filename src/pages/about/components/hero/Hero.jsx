@@ -8,11 +8,17 @@ import useIsMobile from '@src/hooks/useIsMobile';
 import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
 import { useWindowSize } from '@darkroom.engineering/hamo';
 
+import usePortfolioData from '@src/hooks/usePortfolioData';
+
 function Hero() {
   const rootRef = useRef();
   const windowSize = useWindowSize();
   const isMobile = useIsMobile();
   const heroImageRef = useRef();
+  const { data } = usePortfolioData();
+  const profile = data?.profile || {};
+  const aboutHero = profile.aboutHero || "I'm driven by curiosity, shaped by what I build, and always looking for what's next.";
+  const profileImageBack = profile.profileImageBack || '/profile/back.png';
 
   const mainScroller = useMemo(() => {
     if (typeof window !== 'undefined') {
@@ -49,8 +55,7 @@ function Hero() {
     <section ref={rootRef} className={clsx(styles.root, 'layout-block-inner')}>
       <header className={styles.titleContainer}>
         <h2 className={clsx(styles.title, 'h2')}>
-          I&apos;m driven by curiosity, shaped by what I build, and always
-          looking for what&apos;s next.
+          {aboutHero}
         </h2>
       </header>
       <div className={styles.wrapper}>
@@ -58,7 +63,7 @@ function Hero() {
           <Image
             priority
             quality={100}
-            src="/profile/back.png"
+            src={profileImageBack}
             sizes="100%"
             fill
             alt="Portrait"
