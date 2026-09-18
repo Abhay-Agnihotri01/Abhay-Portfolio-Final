@@ -149,6 +149,16 @@ function CustomHead({
             }),
           }}
         />
+
+        {process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL &&
+          process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+            <script
+              async
+              defer
+              src={process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL}
+              data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+            />
+          )}
       </NextHead>
       <NextSeo
         title={title}
