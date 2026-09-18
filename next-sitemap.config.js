@@ -1,6 +1,17 @@
 module.exports = {
-  // Change this to your domain before deploying.
-  siteUrl: 'https://example.com/',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://abhayagnihotri.dpdns.org/',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
+  exclude: ['/admin', '/admin/*'],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/admin', '/admin/*'],
+      },
+    ],
+  },
 };
+
+

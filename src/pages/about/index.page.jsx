@@ -5,23 +5,38 @@ import Services from '@src/pages/about/components/services/Services';
 import Process from '@src/pages/about/components/process/Process';
 import CustomHead from '@src/components/dom/CustomHead';
 
-const seo = {
-  title: 'Abhay Agnihotri - About',
+const profileSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  name: 'About Abhay Agnihotri',
   description:
-    'Learn more about Abhay Agnihotri, a developer who enjoys turning ideas into thoughtful and useful digital experiences.',
+    'Learn about Abhay Agnihotri — background, skills, development process, and experience in AI, Machine Learning, and Software Development.',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'Abhay Agnihotri',
+    jobTitle: 'AI & Machine Learning Engineer',
+  },
+};
+
+const seo = {
+  title: 'About Abhay Agnihotri - AI & Machine Learning Engineer',
+  description:
+    'Learn more about Abhay Agnihotri — an AI & Machine Learning Engineer who turns complex technical challenges into scalable, high-performance software applications.',
   keywords: [
     'Abhay Agnihotri',
     'About Abhay Agnihotri',
-    'Developer',
+    'AI Engineer',
+    'Machine Learning Engineer',
+    'Data Scientist',
     'Software Developer',
     'Web Developer',
-    'Data Analyst',
-    'Machine Learning',
-    'AI',
-    'Data Scientist',
+    'Python Developer',
     'Portfolio',
   ],
+  canonicalPath: '/about',
+  extraSchema: profileSchema,
 };
+
 function Page() {
   return (
     <>
@@ -36,3 +51,4 @@ function Page() {
 }
 
 export default Page;
+

@@ -87,21 +87,36 @@ function Page({ id }) {
 
   const seo = useMemo(
     () => ({
-      title: `Abhay Agnihotri - ${currentProject.title}`,
-      description: `${currentProject.title} (${currentProject.date}): what I built at ${currentProject.company}, what it taught me, and how it shapes the way I operate today.`,
+      title: `${currentProject.title} - Project Case Study | Abhay Agnihotri`,
+      description: `${currentProject.title} (${currentProject.date}): ${currentProject.shortDesc || `what I built at ${currentProject.company}, key technical implementation details, and architecture.`}`,
       keywords: [
         `${currentProject.title}`,
         `${currentProject.company}`,
         `Abhay Agnihotri ${currentProject.title}`,
-        `${currentProject.title} ${currentProject.date}`,
         `${currentProject.title} case study`,
-        'Abhay Agnihotri',
-        'Portfolio',
-        'Case Study',
+        'Abhay Agnihotri Project',
+        'Machine Learning Case Study',
+        'Software Architecture',
       ],
+      canonicalPath: `/projects/${currentProject.id}`,
+      ogImage: currentProject.img,
+      extraSchema: {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: currentProject.title,
+        description: currentProject.shortDesc || `${currentProject.title} project by Abhay Agnihotri`,
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'Web',
+        image: currentProject.img,
+        author: {
+          '@type': 'Person',
+          name: 'Abhay Agnihotri',
+        },
+      },
     }),
     [currentProject],
   );
+
 
   return (
     <>

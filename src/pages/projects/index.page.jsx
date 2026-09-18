@@ -16,20 +16,31 @@ import { useStore } from '@src/store';
 import { useWindowSize } from '@darkroom.engineering/hamo';
 import usePortfolioData from '@src/hooks/usePortfolioData';
 
-const seo = {
-  title: 'Abhay Agnihotri - Projects',
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Projects Showcase - Abhay Agnihotri',
   description:
-    'Explore Abhay Agnihotri&apos;s projects across Data Science, Machine Learning, Artificial Intelligence, and software development.',
+    'Featured projects in Artificial Intelligence, Machine Learning, Data Science, and Full-Stack Web Development created by Abhay Agnihotri.',
+};
+
+const seo = {
+  title: 'Projects Showcase - Abhay Agnihotri | AI & Machine Learning',
+  description:
+    'Explore selected projects by Abhay Agnihotri spanning Data Science, Machine Learning models, AI applications, and Full-Stack Software Engineering.',
   keywords: [
-    'Abhay Agnihotri',
+    'Abhay Agnihotri Projects',
     'Data Science Projects',
     'Machine Learning Projects',
-    'Artificial Intelligence',
+    'Artificial Intelligence Projects',
     'Python Projects',
-    'Data Analytics',
-    'Portfolio',
+    'React Next.js Portfolio',
+    'Full Stack Software Developer',
   ],
+  canonicalPath: '/projects',
+  extraSchema: collectionSchema,
 };
+
 
 function Page() {
   const isMobile = useIsMobile();

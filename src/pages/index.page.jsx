@@ -8,25 +8,25 @@ import Credentials from '@src/pages/components/credentials/Index';
 import CustomHead from '@src/components/dom/CustomHead';
 
 const seo = {
-  title: 'Abhay Agnihotri - Portfolio',
+  title: 'Abhay Agnihotri - AI & Machine Learning Engineer | Portfolio',
   description:
-    'Software Developer specializing in Data Science, Machine Learning, and Full-Stack Development. I build scalable ML solutions, AI-powered applications, data-driven platforms, and production-ready web applications.',
+    'Official portfolio of Abhay Agnihotri — AI & Machine Learning Engineer specializing in Data Science, ML models, AI-powered applications, and Full-Stack Development.',
   keywords: [
     'Abhay Agnihotri',
-    'Software Developer',
     'AI Engineer',
     'Machine Learning Engineer',
-    'Data Science',
-    'Machine Learning',
+    'Data Scientist',
+    'Software Developer',
     'Full Stack Developer',
-    'AI Developer',
     'Python Developer',
     'React Developer',
-    'Data Analytics',
+    'Data Science',
+    'Machine Learning',
     'Artificial Intelligence',
     'Lucknow',
     'India',
   ],
+  canonicalPath: '/',
 };
 
 function Page() {
@@ -44,3 +44,4 @@ function Page() {
 }
 
 export default Page;
+
