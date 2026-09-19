@@ -35,7 +35,7 @@ function Footer() {
   const email = profile.email || DEFAULT_EMAIL;
   const location = profile.location || 'Lucknow, India';
   const brandDesc = profile.brandDesc || 'Transforming complex data into intelligent products, predictive models, and seamless user experiences.';
-  const availability = profile.availability || '';
+  const availability = profile.availability || 'Currently available for new work';
   const copyright = profile.copyright || '© 2026 · Abhay Agnihotri · All Rights Reserved';
   const socialLinks = data?.socialLinks || footerLinks;
   const workLinks = data?.projects
