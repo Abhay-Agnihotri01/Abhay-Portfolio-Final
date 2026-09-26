@@ -5,60 +5,75 @@
 const containt = [
   {
     smallTitle: 'Process',
-    bigTitle: 'How You Work',
+    bigTitle: 'How I Work',
     desc: [
       <div className="p-l">
-        Walk through your process. This section suits an ordered sequence: the
+        A structured, transparent engineering process from problem
       </div>,
       <div className="p-l">
-        steps someone would go through if they hired you.
+        formulation to production deployment and monitoring.
       </div>,
     ],
     descMobile: [
-      <div className="p-l">Walk through your process, step by step.</div>,
+      <div className="p-l">
+        A structured engineering process from concept to deployment.
+      </div>,
     ],
     options: [
       {
-        title: 'Step One',
-        desc: 'What happens first, and what you need from them',
+        title: 'Discovery & Requirement Analysis',
+        desc: 'Deep dive into objectives, dataset feasibility, and system requirements',
       },
-      { title: 'Step Two', desc: 'The next step, in the same voice' },
-      { title: 'Step Three', desc: 'Keep each description to a single line' },
-      { title: 'Step Four', desc: 'Six to twelve steps works well' },
       {
-        title: 'Step Five',
-        desc: 'Fewer feels thin, more feels like a manual',
+        title: 'Architecture & System Modeling',
+        desc: 'Designing scalable data/ML pipelines, API schemas, and full-stack structure',
       },
-      { title: 'Step Six', desc: 'End with what they walk away with' },
+      {
+        title: 'Iterative Prototyping',
+        desc: 'Agile development with functional prototypes and continuous feedback loops',
+      },
+      {
+        title: 'Validation & Benchmarking',
+        desc: 'Rigorous testing, model accuracy tuning, and performance optimization',
+      },
+      {
+        title: 'Deployment & Monitoring',
+        desc: 'Production release with logging, analytics, and clean documentation',
+      },
     ],
   },
   {
     smallTitle: 'Values',
-    bigTitle: 'What You Believe',
+    bigTitle: 'What I Value',
     desc: [
       <div className="p-l">
-        The second block. Principles, working style, or the rules you hold to.
+        Core engineering principles and working standards that guide
       </div>,
       <div className="p-l">
-        Anything that helps someone decide whether they want to work with you.
+        every model I train and line of code I write.
       </div>,
     ],
     descMobile: [
       <div className="p-l">
-        Principles, working style, or the rules you hold to.
+        Core principles guiding every model and line of code I write.
       </div>,
     ],
     options: [
       {
-        title: 'Principle One',
-        desc: 'State it plainly, then say why it matters',
+        title: 'Curiosity-Driven Rigor',
+        desc: 'Relentlessly exploring optimal solutions across data and architecture',
       },
-      { title: 'Principle Two', desc: 'These are opinions, so have some' },
-      { title: 'Principle Three', desc: 'Vague principles read as filler' },
-      { title: 'Principle Four', desc: 'Specific ones are memorable' },
       {
-        title: 'Principle Five',
-        desc: 'Close with the one you would not compromise on',
+        title: 'Clean Architecture',
+        desc: 'Writing maintainable, modular, and self-documenting code',
+      },
+      {
+        title: 'User-Centric AI',
+        desc: 'Building intuitive interfaces that turn complex AI insights into clear user experiences',
+      },
+      {
+        title: 'Continuous Evolution',
+        desc: 'Constantly learning emerging tech across AI, ML, and modern web development',
       },
     ],
   },

@@ -23,7 +23,7 @@ const defaultPortfolioData = {
     ],
     email: 'abhayagnihotri976@gmail.com',
     location: 'Lucknow, India',
-    availability: 'Currently available for new work',
+    availability: 'Currently available for work',
     brandDesc: 'Transforming complex data into intelligent products, predictive models, and seamless user experiences.',
     prefooterTitle: 'Let\'s slice through your next challenge together.',
     prefooterSub: 'Have an exciting project, problem to solve, or just want to say hi? Let\'s talk.',
